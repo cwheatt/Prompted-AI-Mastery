@@ -281,28 +281,63 @@
         </div>
     </div>
 
-    <script>
+     <script>
         const form = document.getElementById('emailForm');
         const emailInput = document.getElementById('emailInput');
         const successMessage = document.getElementById('successMessage');
+        const submitButton = form.querySelector('button[type="submit"]');
 
-        form.addEventListener('submit', function(e) {
+        form.addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const email = emailInput.value;
             
-            // Here you would typically send this to your backend/database
-            // For now, we'll just show the success message
-            console.log('Email submitted:', email);
+            // Disable button and show loading state
+            submitButton.disabled = true;
+            submitButton.textContent = 'Subscribing...';
             
-            // Show success message
-            successMessage.style.display = 'block';
-            emailInput.value = '';
-            
-            // Hide success message after 5 seconds
-            setTimeout(() => {
-                successMessage.style.display = 'none';
-            }, 5000);
+            try {
+                // Call your Netlify function instead of Brevo API directly
+                const response = await fetch('/.netlify/functions/subscribe', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email: email })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Success - show message
+                    successMessage.style.display = 'block';
+                    successMessage.textContent = data.message === 'Already subscribed' 
+                        ? '✅ You\'re already on our list!' 
+                        : '✅ Thanks! We\'ll notify you when we launch.';
+                    emailInput.value = '';
+                    
+                    // Hide success message after 5 seconds
+                    setTimeout(() => {
+                        successMessage.style.display = 'none';
+                    }, 5000);
+                } else {
+                    throw new Error(data.error || 'Subscription failed');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                successMessage.style.display = 'block';
+                successMessage.style.background = '#ef4444';
+                successMessage.textContent = '❌ ' + (error.message || 'Something went wrong. Please try again.');
+                
+                setTimeout(() => {
+                    successMessage.style.display = 'none';
+                    successMessage.style.background = '#48bb78';
+                }, 7000);
+            } finally {
+                // Re-enable button
+                submitButton.disabled = false;
+                submitButton.textContent = 'Notify Me';
+            }
         });
     </script>
 </body>
