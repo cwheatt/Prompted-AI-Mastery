@@ -2285,164 +2285,333 @@
                 </div>
             </div>
         </div>
+<!-- Subject Guides Section -->
+<div id="subjects" class="section">
+    <div class="card">
+        <div class="card-header">
+            <div class="card-icon">📖</div>
+            Subject-Specific Implementation Guides
+        </div>
 
-        <!-- Subject Guides Section -->
-        <div id="subjects" class="section">
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-icon">📖</div>
-                    Subject-Specific Implementation Guides
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('subjects', 'english')">English/Language Arts</button>
+            <button class="tab" onclick="showTab('subjects', 'math')">Mathematics</button>
+            <button class="tab" onclick="showTab('subjects', 'science')">Science</button>
+            <button class="tab" onclick="showTab('subjects', 'history')">Social Studies/History</button>
+            <button class="tab" onclick="showTab('subjects', 'spanish')">Spanish</button> 
+            <button class="tab" onclick="showTab('subjects', 'french')">French</button>
+        </div>
+
+        <div id="english-tab" class="tab-content active">
+            <h3 style="color: var(--primary-color);">English/Language Arts AI Integration</h3>
+            
+            <div class="grid grid-2" style="margin-top: 1.5rem;">
+                <div class="card" style="background: var(--light-bg);">
+                    <h4 style="color: var(--primary-color);">📖 Literary Analysis</h4>
+                    <ul style="margin-top: 1rem;">
+                        <li>Use AI to explore historical context</li>
+                        <li>Ask for alternative interpretations</li>
+                        <li>Student develops original thesis</li>
+                        <li>AI helps identify literary devices</li>
+                    </ul>
                 </div>
 
-                <div class="tabs">
-                    <button class="tab active" onclick="showTab('subjects', 'english')">English/Language Arts</button>
-                    <button class="tab" onclick="showTab('subjects', 'math')">Mathematics</button>
-                    <button class="tab" onclick="showTab('subjects', 'science')">Science</button>
-                    <button class="tab" onclick="showTab('subjects', 'history')">Social Studies/History</button>
+                <div class="card" style="background: var(--light-bg);">
+                    <h4 style="color: var(--primary-color);">✍️ Creative Writing</h4>
+                    <ul style="margin-top: 1rem;">
+                        <li>AI for "what if" scenarios</li>
+                        <li>Get feedback on plot consistency</li>
+                        <li>Student maintains unique voice</li>
+                        <li>AI suggests vocabulary alternatives</li>
+                    </ul>
                 </div>
+            </div>
 
-                <div id="english-tab" class="tab-content active">
-                    <h3 style="color: var(--primary-color);">English/Language Arts AI Integration</h3>
-                    
-                    <div class="grid grid-2" style="margin-top: 1.5rem;">
-                        <div class="card" style="background: var(--light-bg);">
-                            <h4 style="color: var(--primary-color);">📖 Literary Analysis</h4>
-                            <ul style="margin-top: 1rem;">
-                                <li>Use AI to explore historical context</li>
-                                <li>Ask for alternative interpretations</li>
-                                <li>Student develops original thesis</li>
-                                <li>AI helps identify literary devices</li>
-                            </ul>
-                        </div>
-
-                        <div class="card" style="background: var(--light-bg);">
-                            <h4 style="color: var(--primary-color);">✍️ Creative Writing</h4>
-                            <ul style="margin-top: 1rem;">
-                                <li>AI for "what if" scenarios</li>
-                                <li>Get feedback on plot consistency</li>
-                                <li>Student maintains unique voice</li>
-                                <li>AI suggests vocabulary alternatives</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="alert alert-success" style="margin-top: 1.5rem;">
-                        <strong>Sample Prompt Progression:</strong>
-                        <ol style="margin-top: 0.5rem;">
-                            <li>"What are common themes in Shakespeare's tragedies?"</li>
-                            <li>"How does the theme of ambition in Macbeth compare to Hamlet's indecision?"</li>
-                            <li>"I argue that Lady Macbeth is more tragic than Macbeth. What textual evidence might challenge this?"</li>
-                        </ol>
-                    </div>
-                </div>
-
-                <div id="math-tab" class="tab-content">
-                    <h3 style="color: var(--primary-color);">Mathematics AI Integration</h3>
-                    
-                    <div class="grid grid-2" style="margin-top: 1.5rem;">
-                        <div class="card" style="background: var(--light-bg);">
-                            <h4 style="color: var(--primary-color);">🧮 Problem-Solving</h4>
-                            <ul style="margin-top: 1rem;">
-                                <li>Understand problem types and strategies</li>
-                                <li>Ask for similar practice problems</li>
-                                <li>Work through solutions independently</li>
-                                <li>AI helps check reasoning, not answers</li>
-                            </ul>
-                        </div>
-
-                        <div class="card" style="background: var(--light-bg);">
-                            <h4 style="color: var(--primary-color);">🎯 Conceptual Understanding</h4>
-                            <ul style="margin-top: 1rem;">
-                                <li>Visualize abstract concepts</li>
-                                <li>Connect math to real-world applications</li>
-                                <li>Explain understanding in own words</li>
-                                <li>AI provides alternative explanations</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="alert alert-success" style="margin-top: 1.5rem;">
-                        <strong>Sample Prompt Progression:</strong>
-                        <ol style="margin-top: 0.5rem;">
-                            <li>"What type of problem is this: 'Find the area under the curve y=x²'?"</li>
-                            <li>"Explain why integration finds area without solving this specific problem"</li>
-                            <li>"I got 8.33 for the area from 0 to 2. Walk me through checking my work without giving the answer"</li>
-                        </ol>
-                    </div>
-                </div>
-
-                <div id="science-tab" class="tab-content">
-                    <h3 style="color: var(--primary-color);">Science AI Integration</h3>
-                    
-                    <div class="grid grid-2" style="margin-top: 1.5rem;">
-                        <div class="card" style="background: var(--light-bg);">
-                            <h4 style="color: var(--primary-color);">🔬 Scientific Inquiry</h4>
-                            <ul style="margin-top: 1rem;">
-                                <li>Research background for hypotheses</li>
-                                <li>Explore variables not initially considered</li>
-                                <li>Design experiments independently</li>
-                                <li>AI helps identify sources of error</li>
-                            </ul>
-                        </div>
-
-                        <div class="card" style="background: var(--light-bg);">
-                            <h4 style="color: var(--primary-color);">📊 Data Analysis</h4>
-                            <ul style="margin-top: 1rem;">
-                                <li>Understand statistical approaches</li>
-                                <li>Check calculation methods</li>
-                                <li>Draw own conclusions from data</li>
-                                <li>AI suggests alternative interpretations</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="alert alert-success" style="margin-top: 1.5rem;">
-                        <strong>Sample Prompt Progression:</strong>
-                        <ol style="margin-top: 0.5rem;">
-                            <li>"What factors affect plant growth rate?"</li>
-                            <li>"If I'm testing light intensity on plant growth, what variables must I control?"</li>
-                            <li>"My data shows unexpected results at high light intensity. What might explain this without telling me the answer?"</li>
-                        </ol>
-                    </div>
-                </div>
-
-                <div id="history-tab" class="tab-content">
-                    <h3 style="color: var(--primary-color);">Social Studies/History AI Integration</h3>
-                    
-                    <div class="grid grid-2" style="margin-top: 1.5rem;">
-                        <div class="card" style="background: var(--light-bg);">
-                            <h4 style="color: var(--primary-color);">📜 Historical Analysis</h4>
-                            <ul style="margin-top: 1rem;">
-                                <li>Find multiple perspectives on events</li>
-                                <li>Identify primary source recommendations</li>
-                                <li>Develop own interpretation</li>
-                                <li>AI helps identify biases in sources</li>
-                            </ul>
-                        </div>
-
-                        <div class="card" style="background: var(--light-bg);">
-                            <h4 style="color: var(--primary-color);">🌍 Current Events</h4>
-                            <ul style="margin-top: 1rem;">
-                                <li>Understand context and background</li>
-                                <li>Find diverse news sources</li>
-                                <li>Form own opinions</li>
-                                <li>AI helps identify logical fallacies</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="alert alert-success" style="margin-top: 1.5rem;">
-                        <strong>Sample Prompt Progression:</strong>
-                        <ol style="margin-top: 0.5rem;">
-                            <li>"What were the causes of the American Revolution?"</li>
-                            <li>"How do British and American historians differently interpret the Boston Tea Party?"</li>
-                            <li>"I believe economic factors were more important than political ideals. What primary sources might challenge this?"</li>
-                        </ol>
-                    </div>
-                </div>
+            <div class="alert alert-success" style="margin-top: 1.5rem;">
+                <strong>Sample Prompt Progression:</strong>
+                <ol style="margin-top: 0.5rem;">
+                    <li>"What are common themes in Shakespeare's tragedies?"</li>
+                    <li>"How does the theme of ambition in Macbeth compare to Hamlet's indecision?"</li>
+                    <li>"I argue that Lady Macbeth is more tragic than Macbeth. What textual evidence might challenge this?"</li>
+                </ol>
             </div>
         </div>
 
+        <div id="math-tab" class="tab-content">
+            <h3 style="color: var(--primary-color);">Mathematics AI Integration</h3>
+            
+            <div class="grid grid-2" style="margin-top: 1.5rem;">
+                <div class="card" style="background: var(--light-bg);">
+                    <h4 style="color: var(--primary-color);">🧮 Problem-Solving</h4>
+                    <ul style="margin-top: 1rem;">
+                        <li>Understand problem types and strategies</li>
+                        <li>Ask for similar practice problems</li>
+                        <li>Work through solutions independently</li>
+                        <li>AI helps check reasoning, not answers</li>
+                    </ul>
+                </div>
+
+                <div class="card" style="background: var(--light-bg);">
+                    <h4 style="color: var(--primary-color);">🎯 Conceptual Understanding</h4>
+                    <ul style="margin-top: 1rem;">
+                        <li>Visualize abstract concepts</li>
+                        <li>Connect math to real-world applications</li>
+                        <li>Explain understanding in own words</li>
+                        <li>AI provides alternative explanations</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="alert alert-success" style="margin-top: 1.5rem;">
+                <strong>Sample Prompt Progression:</strong>
+                <ol style="margin-top: 0.5rem;">
+                    <li>"What type of problem is this: 'Find the area under the curve y=x²'?"</li>
+                    <li>"Explain why integration finds area without solving this specific problem"</li>
+                    <li>"I got 8.33 for the area from 0 to 2. Walk me through checking my work without giving the answer"</li>
+                </ol>
+            </div>
+        </div>
+
+        <div id="science-tab" class="tab-content">
+            <h3 style="color: var(--primary-color);">Science AI Integration</h3>
+            
+            <div class="grid grid-2" style="margin-top: 1.5rem;">
+                <div class="card" style="background: var(--light-bg);">
+                    <h4 style="color: var(--primary-color);">🔬 Scientific Inquiry</h4>
+                    <ul style="margin-top: 1rem;">
+                        <li>Research background for hypotheses</li>
+                        <li>Explore variables not initially considered</li>
+                        <li>Design experiments independently</li>
+                        <li>AI helps identify sources of error</li>
+                    </ul>
+                </div>
+
+                <div class="card" style="background: var(--light-bg);">
+                    <h4 style="color: var(--primary-color);">📊 Data Analysis</h4>
+                    <ul style="margin-top: 1rem;">
+                        <li>Understand statistical approaches</li>
+                        <li>Check calculation methods</li>
+                        <li>Draw own conclusions from data</li>
+                        <li>AI suggests alternative interpretations</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="alert alert-success" style="margin-top: 1.5rem;">
+                <strong>Sample Prompt Progression:</strong>
+                <ol style="margin-top: 0.5rem;">
+                    <li>"What factors affect plant growth rate?"</li>
+                    <li>"If I'm testing light intensity on plant growth, what variables must I control?"</li>
+                    <li>"My data shows unexpected results at high light intensity. What might explain this without telling me the answer?"</li>
+                </ol>
+            </div>
+        </div>
+
+        <div id="history-tab" class="tab-content">
+            <h3 style="color: var(--primary-color);">Social Studies/History AI Integration</h3>
+            
+            <div class="grid grid-2" style="margin-top: 1.5rem;">
+                <div class="card" style="background: var(--light-bg);">
+                    <h4 style="color: var(--primary-color);">📜 Historical Analysis</h4>
+                    <ul style="margin-top: 1rem;">
+                        <li>Find multiple perspectives on events</li>
+                        <li>Identify primary source recommendations</li>
+                        <li>Develop own interpretation</li>
+                        <li>AI helps identify biases in sources</li>
+                    </ul>
+                </div>
+
+                <div class="card" style="background: var(--light-bg);">
+                    <h4 style="color: var(--primary-color);">🌍 Current Events</h4>
+                    <ul style="margin-top: 1rem;">
+                        <li>Understand context and background</li>
+                        <li>Find diverse news sources</li>
+                        <li>Form own opinions</li>
+                        <li>AI helps identify logical fallacies</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="alert alert-success" style="margin-top: 1.5rem;">
+                <strong>Sample Prompt Progression:</strong>
+                <ol style="margin-top: 0.5rem;">
+                    <li>"What were the causes of the American Revolution?"</li>
+                    <li>"How do British and American historians differently interpret the Boston Tea Party?"</li>
+                    <li>"I believe economic factors were more important than political ideals. What primary sources might challenge this?"</li>
+                </ol>
+            </div>
+        </div>
+
+        <div id="spanish-tab" class="tab-content">
+            <h3 style="color: var(--primary-color);">Spanish AI Integration</h3>
+            
+            <div class="alert alert-info" style="margin-bottom: 1.5rem;">
+                <strong>Key Principle:</strong> AI is a powerful language learning tool when used to enhance—not replace—authentic communication and cultural understanding.
+            </div>
+            
+            <div class="grid grid-2" style="margin-top: 1.5rem;">
+                <div class="card" style="background: var(--light-bg);">
+                    <h4 style="color: var(--primary-color);">📚 Vocabulary & Translation</h4>
+                    <ul style="margin-top: 1rem;">
+                        <li>Ask for context-specific vocabulary</li>
+                        <li>Request multiple translation options</li>
+                        <li>Verify idioms with native sources</li>
+                        <li>Student creates own example sentences</li>
+                    </ul>
+                </div>
+                
+                <div class="card" style="background: var(--light-bg);">
+                    <h4 style="color: var(--primary-color);">🌎 Cultural Research</h4>
+                    <ul style="margin-top: 1rem;">
+                        <li>Explore cultural practices and traditions</li>
+                        <li>Identify potential stereotypes in AI responses</li>
+                        <li>Verify with authentic cultural sources</li>
+                        <li>Student develops nuanced understanding</li>
+                    </ul>
+                </div>
+                
+                <div class="card" style="background: var(--light-bg);">
+                    <h4 style="color: var(--primary-color);">💬 Conversational Practice</h4>
+                    <ul style="margin-top: 1rem;">
+                        <li>Practice dialogue scenarios</li>
+                        <li>Get grammar explanations in English</li>
+                        <li>Student must speak/write independently first</li>
+                        <li>AI provides feedback, not answers</li>
+                    </ul>
+                </div>
+                
+                <div class="card" style="background: var(--light-bg);">
+                    <h4 style="color: var(--primary-color);">✍️ Writing & Composition</h4>
+                    <ul style="margin-top: 1rem;">
+                        <li>Check grammar patterns (not full essays)</li>
+                        <li>Ask for alternative ways to express ideas</li>
+                        <li>Student maintains original voice</li>
+                        <li>AI suggests improvements, not rewrites</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="alert alert-success" style="margin-top: 1.5rem;">
+                <strong>Sample Prompt Progression:</strong>
+                <ol style="margin-top: 0.5rem;">
+                    <li>"What are common ways to greet someone in Spanish?"</li>
+                    <li>"When would I use 'Buenos días' vs. 'Hola' in a formal business setting in Mexico?"</li>
+                    <li>"I wrote: 'Yo tengo hambre mucho.' Explain what's wrong with this sentence without giving me the correct answer."</li>
+                </ol>
+            </div>
+            
+            <div class="card" style="margin-top: 1.5rem; background: #fff3cd; border-left: 4px solid #ffc107;">
+                <h4 style="color: var(--text-dark);">⚠️ Spanish-Specific Warnings</h4>
+                <ul style="margin-top: 1rem;">
+                    <li><strong>Regional Variations:</strong> AI may default to one Spanish dialect. Always verify regional appropriateness.</li>
+                    <li><strong>False Friends:</strong> AI might miss subtle differences between Spanish and English cognates (e.g., "embarazada" ≠ "embarrassed").</li>
+                    <li><strong>Cultural Context:</strong> AI can perpetuate stereotypes. Always verify cultural information with authentic sources.</li>
+                    <li><strong>Formal vs. Informal:</strong> AI may not consistently distinguish between tú/usted or vosotros usage.</li>
+                </ul>
+            </div>
+            
+            <div class="card" style="margin-top: 1.5rem; background: var(--light-bg);">
+                <h4 style="color: var(--primary-color);">🎯 THINK Framework for Spanish Learning</h4>
+                <div style="margin-top: 1rem;">
+                    <p><strong>T - Truthful:</strong> Is this translation/explanation accurate for the specific Spanish-speaking region I'm studying?</p>
+                    <p style="margin-top: 0.5rem;"><strong>H - Helpful:</strong> Does this AI interaction help me understand the language better, or am I just copying?</p>
+                    <p style="margin-top: 0.5rem;"><strong>I - Inspiring:</strong> Does this encourage me to practice speaking/writing more, or make me dependent?</p>
+                    <p style="margin-top: 0.5rem;"><strong>N - Necessary:</strong> Should I try this on my own first before asking AI?</p>
+                    <p style="margin-top: 0.5rem;"><strong>K - Kind:</strong> Am I respecting the culture and avoiding stereotypes in my questions?</p>
+                </div>
+            </div>
+            
+            <div class="alert alert-warning" style="margin-top: 1.5rem;">
+                <strong>💡 Teacher Tip:</strong> Require students to attempt writing/speaking first, then use AI for specific feedback on grammar patterns—never for complete translations of their work.
+            </div>
+        </div>
+
+        <div id="french-tab" class="tab-content">
+            <h3 style="color: var(--primary-color);">French AI Integration</h3>
+            
+            <div class="alert alert-info" style="margin-bottom: 1.5rem;">
+                <strong>Key Principle:</strong> AI enhances French learning when used strategically to support authentic communication and cultural appreciation.
+            </div>
+            
+            <div class="grid grid-2" style="margin-top: 1.5rem;">
+                <div class="card" style="background: var(--light-bg);">
+                    <h4 style="color: var(--primary-color);">📚 Vocabulary & Translation</h4>
+                    <ul style="margin-top: 1rem;">
+                        <li>Explore formal vs. informal register</li>
+                        <li>Request context for idiomatic expressions</li>
+                        <li>Verify pronunciation guides</li>
+                        <li>Student creates authentic usage examples</li>
+                    </ul>
+                </div>
+                
+                <div class="card" style="background: var(--light-bg);">
+                    <h4 style="color: var(--primary-color);">🇫🇷 Cultural Understanding</h4>
+                    <ul style="margin-top: 1rem;">
+                        <li>Research French-speaking regions worldwide</li>
+                        <li>Compare Francophone cultural practices</li>
+                        <li>Verify historical context</li>
+                        <li>Student develops cultural sensitivity</li>
+                    </ul>
+                </div>
+                
+                <div class="card" style="background: var(--light-bg);">
+                    <h4 style="color: var(--primary-color);">💬 Conversation Skills</h4>
+                    <ul style="margin-top: 1rem;">
+                        <li>Practice dialogue in specific contexts</li>
+                        <li>Get explanations of grammatical concepts</li>
+                        <li>Student attempts communication first</li>
+                        <li>AI provides targeted feedback</li>
+                    </ul>
+                </div>
+                
+                <div class="card" style="background: var(--light-bg);">
+                    <h4 style="color: var(--primary-color);">✍️ Writing Development</h4>
+                    <ul style="margin-top: 1rem;">
+                        <li>Check specific grammar structures</li>
+                        <li>Request alternative phrasings</li>
+                        <li>Student maintains authentic voice</li>
+                        <li>AI suggests refinements, not replacements</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="alert alert-success" style="margin-top: 1.5rem;">
+                <strong>Sample Prompt Progression:</strong>
+                <ol style="margin-top: 0.5rem;">
+                    <li>"What's the difference between 'tu' and 'vous' in French?"</li>
+                    <li>"In a French business email, should I use 'tu' or 'vous' when writing to a colleague I've never met?"</li>
+                    <li>"I wrote: 'Je suis allé au magasin hier soir.' Is my passé composé correct? Explain without giving me the answer."</li>
+                </ol>
+            </div>
+            
+            <div class="card" style="margin-top: 1.5rem; background: #fff3cd; border-left: 4px solid #ffc107;">
+                <h4 style="color: var(--text-dark);">⚠️ French-Specific Warnings</h4>
+                <ul style="margin-top: 1rem;">
+                    <li><strong>Francophone Diversity:</strong> AI may default to Parisian French. Verify appropriateness for Quebec, African, or other Francophone contexts.</li>
+                    <li><strong>Gender Agreement:</strong> AI might make errors with complex gender agreement rules. Always double-check.</li>
+                    <li><strong>Register & Formality:</strong> French has strict formal/informal distinctions. Verify AI suggestions match the context.</li>
+                    <li><strong>Pronunciation:</strong> AI text can't fully convey French pronunciation nuances. Use audio resources for verification.</li>
+                </ul>
+            </div>
+            
+            <div class="card" style="margin-top: 1.5rem; background: var(--light-bg);">
+                <h4 style="color: var(--primary-color);">🎯 THINK Framework for French Learning</h4>
+                <div style="margin-top: 1rem;">
+                    <p><strong>T - Truthful:</strong> Is this translation/explanation accurate for the specific Francophone context I'm studying?</p>
+                    <p style="margin-top: 0.5rem;"><strong>H - Helpful:</strong> Does this AI interaction deepen my understanding of French, or am I just getting quick answers?</p>
+                    <p style="margin-top: 0.5rem;"><strong>I - Inspiring:</strong> Does this motivate me to practice more, or create dependency?</p>
+                    <p style="margin-top: 0.5rem;"><strong>N - Necessary:</strong> Should I attempt this independently before consulting AI?</p>
+                    <p style="margin-top: 0.5rem;"><strong>K - Kind:</strong> Am I approaching French culture with respect and avoiding stereotypes?</p>
+                </div>
+            </div>
+            
+            <div class="alert alert-warning" style="margin-top: 1.5rem;">
+                <strong>💡 Teacher Tip:</strong> Encourage students to write first drafts independently, then use AI for targeted grammar feedback—never for complete translations or essay generation.
+            </div>
+        </div>
+
+    </div>
+</div>
         <!-- Implementation Section -->
         <div id="implementation" class="section">
             <div class="card">
