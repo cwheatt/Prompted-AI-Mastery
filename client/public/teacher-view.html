@@ -5855,23 +5855,7 @@ Sincerely,
             });
         });
 
-        async function checkSession() {
-            if (!supabase) return;
-            
-            const { data: { session } } = await supabase.auth.getSession();
-            const authBtn = document.getElementById('logout-btn');
-            
-            if (session) {
-                // User is logged in - show logout button
-                authBtn.textContent = 'Logout';
-                authBtn.onclick = handleLogout;
-            } else {
-                // User is not logged in - show login button
-                window.location.href = '/';
-
-            }
-        }
-
+    
         async function handleLogout() {
             if (!supabase) return;
             
