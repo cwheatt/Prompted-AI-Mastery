@@ -1229,104 +1229,78 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<script>
+<script type="module">
+       import { supabase } from './auth.js';
+    
+    // Make supabase available globally for other functions
+    window.supabase = supabase;
+    
+    let supabaseInitialized = true;
 
-    let supabase;
-
-    // Initialize Supabase
-    async function initSupabase() {
-        console.log('Initializing Supabase...');
+    // Check session on page load
+    async function checkSession() {
         try {
-            const supabaseUrl = localStorage.getItem('SUPABASE_URL');
-            const supabaseAnonKey = localStorage.getItem('SUPABASE_ANON_KEY');
+            const { data: { session }, error } = await supabase.auth.getSession();
             
-            console.log('Supabase URL:', supabaseUrl);
-            console.log('Supabase Key exists:', !!supabaseAnonKey);
+            if (error) throw error;
             
-            if (!supabaseUrl || !supabaseAnonKey) {
-                throw new Error('Missing Supabase configuration');
+            if (!session) {
+                console.log('No active session, redirecting to login...');
+                window.location.href = './login-signup.html';
+                return;
             }
             
-            supabase = window.supabase.createClient(supabaseUrl, supabaseAnonKey);
-            console.log('Supabase initialized successfully');
+            console.log('Session found:', session.user.email);
         } catch (error) {
-            console.error('Failed to initialize Supabase:', error);
+            console.error('Session check error:', error);
+            window.location.href = './login-signup.html';
         }
     }
-    
-    async function checkSession() {
-            if (!supabase) return;
-            
-            const { data: { session } } = await supabase.auth.getSession();
-            const authBtn = document.getElementById('logout-btn');
-            
-            if (session) {
-                // User is logged in - show logout button
-                authBtn.textContent = 'Logout';
-                authBtn.onclick = handleLogout;
-            } else {
-                // User is not logged in - show login button
-                window.location.href = '/';
-
-            }
-        }
 
     // Logout function
-    async function handleLogout() {
-    console.log('Logout button clicked!');
-    console.log('Supabase client exists:', !!supabase);
-    
-    if (!supabase) {
-        alert('Still initializing. Please wait.');
-        return;
+        window.handleLogout = async function() {
+        console.log('Logout button clicked!');
+        
+        const btn = document.getElementById('logout-btn');
+        if (btn) {
+            btn.disabled = true;
+            btn.textContent = 'Logging out...';
+        }
+
+        try {
+            console.log('Attempting to sign out...');
+            const { error } = await supabase.auth.signOut();
+            
+            if (error) throw error;
+
+            console.log('Sign out successful, redirecting...');
+            window.location.href = './';
+            
+        } catch (error) {
+            console.error('Logout error:', error);
+            alert('Error logging out. Please try again.');
+            if (btn) {
+                btn.disabled = false;
+                btn.textContent = 'Logout';
+            }
+        }
     }
-
-    const btn = document.getElementById('logout-btn');
-    btn.disabled = true;
-    btn.textContent = 'Logging out...';
-
-    try {
-        console.log('Attempting to sign out...');
-        const { error } = await supabase.auth.signOut();
-        
-        if (error) throw error;
-
-        console.log('Sign out successful, clearing localStorage and redirecting...');
-        
-        // Clear Supabase credentials from localStorage
-        localStorage.removeItem('SUPABASE_URL');
-        localStorage.removeItem('SUPABASE_ANON_KEY');
-        
-        // Or clear ALL localStorage (if you want to clear everything):
-        // localStorage.clear();
-        
-        // Redirect to index.html after successful logout
-        window.location.href = '/';
-        
-    } catch (error) {
-        console.error('Logout error:', error);
-        alert('Error logging out. Please try again.');
-        btn.disabled = false;
-        btn.textContent = 'Logout';
-    }
-}
-
 
     // Initialize on page load
     window.addEventListener('load', async () => {
         console.log('Page loaded');
-        await initSupabase();
         await checkSession();
+        
         // Add logout button listener
         const logoutBtn = document.getElementById('logout-btn');
         console.log('Logout button found:', !!logoutBtn);
         
         if (logoutBtn) {
-            
-            logoutBtn.addEventListener('click', handleLogout);
+            logoutBtn.addEventListener('click', window.handleLogout);
             console.log('Click listener attached to logout button');
         }
     });
+    
     // Navigation functionality
     function showSection(sectionId) {
         const sections = document.querySelectorAll('.section');
