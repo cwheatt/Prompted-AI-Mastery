@@ -4,6 +4,7 @@ import tailwindcss from "@tailwindcss/vite";
 import path from "path";
 
 export default defineConfig({
+  base: '/Prompted-AI-Mastery/',
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
