@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prompted - Login</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root {
+            --primary-color: #1a4d2e;
+            --secondary-color: #9eff00;
+            --success-color: #9eff00;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --dark-bg: #000000;
+            --light-bg: #E8F4ED;
+            --text-dark: #000000;
+            --text-light: #1a4d2e;
+            --border-color: #9eff00;
+            --gradient: linear-gradient(135deg, #1a4d2e 0%, #9eff00 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background: var(--light-bg);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(26, 77, 46, 0.2);
+            max-width: 450px;
+            width: 100%;
+            padding: 40px;
+            animation: slideUp 0.5s ease-out;
+            border: 2px solid var(--border-color);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        .logo h1 {
+            color: var(--primary-color);
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .logo p {
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            background: none;
+            border: none;
+            color: var(--text-light);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .tab-btn.active {
+            color: var(--primary-color);
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--secondary-color);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: var(--text-dark);
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.3s;
+            background: white;
+            color: var(--text-dark);
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(26, 77, 46, 0.1);
+        }
+
+        .role-select {
+            display: none;
+        }
+
+        .role-select.show {
+            display: block;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--gradient);
+            color: var(--dark-bg);
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(158, 255, 0, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border-left: 4px solid var(--danger-color);
+        }
+
+        .alert-success {
+            background: #f0ffe5;
+            color: #1a4d2e;
+            border-left: 4px solid var(--success-color);
+        }
+
+        .forgot-password {
+            text-align: right;
+            margin-top: 10px;
+        }
+
+        .forgot-password a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+
+        #signup-form {
+            display: none;
+        }
+
+        #signup-form.active {
+            display: block;
+        }
+
+        #login-form.active {
+            display: block;
+        }
+
+        #login-form {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo">
+            <div class="logo-icon">🎯</div>
+            <h1>Prompted</h1>
+            <p>AI Mastery Platform</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showForm('login')">Login</button>
+            <button class="tab-btn" onclick="showForm('signup')">Sign Up</button>
+        </div>
+
+        <div id="alert" class="alert"></div>
+
+        <!-- Login Form -->
+        <form id="login-form" class="active">
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="login-email" placeholder="your@email.com" required>
+            </div>
+
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="login-password" placeholder="Enter your password" required>
+            </div>
+
+            <div class="forgot-password">
+                <a href="#" onclick="handleForgotPassword(event)">Forgot Password?</a>
+            </div>
+
+            <button type="submit" class="btn" id="login-btn">Log In</button>
+        </form>
+
+        <!-- Signup Form -->
+        <form id="signup-form">
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" id="signup-name" placeholder="John Doe" required>
+            </div>
+
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="signup-email" placeholder="your@email.com" required>
+            </div>
+
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="signup-password" placeholder="Minimum 6 characters" required>
+            </div>
+
+            <div class="form-group role-select show">
+                <label>I am a...</label>
+                <select id="signup-role" required>
+                    <option value="">Select Role</option>
+                    <option value="student">Student</option>
+                    <option value="teacher">Teacher</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn" id="signup-btn">Create Account</button>
+        </form>
+    </div>
+
+    <script>
+    let supabase;
+
+    // Fetch Supabase config from Netlify function and initialize
+    async function initSupabase() {
+        try {
+            const response = await fetch('/.netlify/functions/user-management-db');
+            const config = await response.json();
+            
+            // Use the global supabase object from the CDN
+            supabase = window.supabase.createClient(config.url, config.anonKey);
+            
+            // Check if user is already logged in after initialization
+            checkExistingSession();
+        } catch (error) {
+            console.error('Failed to initialize Supabase:', error);
+            showAlert('Configuration error. Please try again later.', 'error');
+        }
+    }
+
+    // Check if user is already logged in
+    async function checkExistingSession() {
+        if (!supabase) return;
+        
+        const { data: { session } } = await supabase.auth.getSession();
+        
+        if (session) {
+            // User is already logged in, redirect to appropriate dashboard
+            const { data: profile } = await supabase
+                .from('profiles')
+                .select('role')
+                .eq('id', session.user.id)
+                .single();
+
+            if (profile?.role === 'teacher') {
+                window.location.href = '/index.html';
+            } else {
+                window.location.href = '/index.html';
+            }
+        }
+    }
+
+    // Initialize on page load
+    window.addEventListener('load', initSupabase);
+
+    // Show alert function
+    function showAlert(message, type) {
+        const alert = document.getElementById('alert');
+        alert.className = `alert alert-${type} show`;
+        alert.textContent = message;
+        setTimeout(() => {
+            alert.classList.remove('show');
+        }, 5000);
+    }
+
+    // Switch between login and signup forms
+    function showForm(formType) {
+        const loginForm = document.getElementById('login-form');
+        const signupForm = document.getElementById('signup-form');
+        const tabs = document.querySelectorAll('.tab-btn');
+
+        tabs.forEach(tab => tab.classList.remove('active'));
+
+        if (formType === 'login') {
+            loginForm.classList.add('active');
+            signupForm.classList.remove('active');
+            tabs[0].classList.add('active');
+        } else {
+            signupForm.classList.add('active');
+            loginForm.classList.remove('active');
+            tabs[1].classList.add('active');
+        }
+    }
+
+    // Handle Login
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        if (!supabase) {
+            showAlert('Still initializing. Please wait a moment.', 'error');
+            return;
+        }
+        
+        const btn = document.getElementById('login-btn');
+        btn.disabled = true;
+        btn.textContent = 'Logging in...';
+
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
+
+        try {
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email,
+                password
+            });
+
+            if (error) throw error;
+
+            // Get user role from profile
+            const { data: profile } = await supabase
+                .from('profiles')
+                .select('role')
+                .eq('id', data.user.id)
+                .single();
+
+            showAlert('Login successful! Redirecting...', 'success');
+
+            // Redirect based on role
+            setTimeout(() => {
+                if (profile?.role === 'teacher') {
+                    window.location.href = '/index.html';
+                } else {
+                    window.location.href = '/index.html';
+                }
+            }, 1500);
+
+        } catch (error) {
+            showAlert(error.message, 'error');
+            btn.disabled = false;
+            btn.textContent = 'Log In';
+        }
+    });
+
+    // Handle Signup
+    document.getElementById('signup-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        if (!supabase) {
+            showAlert('Still initializing. Please wait a moment.', 'error');
+            return;
+        }
+        
+        const btn = document.getElementById('signup-btn');
+        btn.disabled = true;
+        btn.textContent = 'Creating account...';
+
+        const name = document.getElementById('signup-name').value;
+        const email = document.getElementById('signup-email').value;
+        const password = document.getElementById('signup-password').value;
+        const role = document.getElementById('signup-role').value;
+
+        if (!role) {
+            showAlert('Please select a role', 'error');
+            btn.disabled = false;
+            btn.textContent = 'Create Account';
+            return;
+        }
+
+        try {
+            // Sign up user
+            const { data, error } = await supabase.auth.signUp({
+                email,
+                password,
+                options: {
+                    data: {
+                        full_name: name,
+                        role: role
+                    }
+                }
+            });
+
+            if (error) throw error;
+
+            // Create profile entry
+            const { error: profileError } = await supabase
+                .from('profiles')
+                .insert([
+                    {
+                        id: data.user.id,
+                        full_name: name,
+                        email: email,
+                        role: role
+                    }
+                ]);
+
+            if (profileError) throw profileError;
+
+            showAlert('Account created! Please check your email to verify.', 'success');
+            
+            // Reset form
+            document.getElementById('signup-form').reset();
+            
+            // Switch to login after 3 seconds
+            setTimeout(() => {
+                showForm('login');
+            }, 3000);
+
+        } catch (error) {
+            showAlert(error.message, 'error');
+            btn.disabled = false;
+            btn.textContent = 'Create Account';
+        }
+    });
+
+    // Handle Forgot Password
+    async function handleForgotPassword(e) {
+        e.preventDefault();
+        
+        if (!supabase) {
+            showAlert('Still initializing. Please wait a moment.', 'error');
+            return;
+        }
+        
+        const email = prompt('Enter your email address:');
+        
+        if (!email) return;
+
+        try {
+            const { error } = await supabase.auth.resetPasswordForEmail(email, {
+                redirectTo: window.location.origin + '/reset-password.html',
+            });
+
+            if (error) throw error;
+
+            showAlert('Password reset email sent! Check your inbox.', 'success');
+        } catch (error) {
+            showAlert(error.message, 'error');
+        }
+    }
+</script>
+</body>
+</html>

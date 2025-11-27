@@ -1,0 +1,1436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prompted: AI Mastery Platform - Education Edition</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #1a4d2e;
+            --secondary-color: #9eff00;
+            --success-color: #9eff00;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --dark-bg: #000000;
+            --light-bg: #E8F4ED;
+            --text-dark: #000000;
+            --text-light: #1a4d2e;
+            --border-color: #9eff00;
+            --gradient: linear-gradient(135deg, #1a4d2e 0%, #9eff00 100%);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background: var(--light-bg);
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--primary-color);
+        }
+
+        /* Header Styles */
+        .header {
+            background: var(--gradient);
+            color: white;
+            padding: 2rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .header p {
+            opacity: 0.95;
+            font-size: 1.1rem;
+        }
+
+        /* Navigation - Vertical Sidebar */
+        .nav {
+            position: fixed;
+            left: 0;
+            top: 120px;
+            width: 250px;
+            height: calc(100vh - 120px);
+            background: white;
+            border-right: 2px solid var(--border-color);
+            overflow-y: auto;
+            z-index: 999;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+        }
+
+        .nav-container {
+            display: flex;
+            flex-direction: column;
+            padding: 1rem 0;
+        }
+
+        .nav-item {
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            border-left: 4px solid transparent;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .nav-item:hover {
+            background: var(--light-bg);
+            color: var(--primary-color);
+            border-left-color: var(--secondary-color);
+        }
+
+        .nav-item.active {
+            border-left-color: var(--primary-color);
+            color: var(--primary-color);
+            background: var(--light-bg);
+            font-weight: 600;
+        }
+
+        /* Adjust main content to account for sidebar */
+        body {
+            margin-left: 250px;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .card-header {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--gradient);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Interactive Elements */
+        .assessment-item {
+            padding: 1rem;
+            margin: 0.5rem 0;
+            background: var(--light-bg);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: background 0.3s ease;
+        }
+
+        .assessment-item:hover {
+            background: #e2e8f0;
+        }
+
+        .slider-container {
+            flex-grow: 1;
+        }
+
+        .slider {
+            width: 100%;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 8px;
+            border-radius: 4px;
+            background: var(--border-color);
+            outline: none;
+            transition: background 0.3s;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            cursor: pointer;
+        }
+
+        .slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            cursor: pointer;
+        }
+
+        .slider-value {
+            width: 40px;
+            text-align: center;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            display: inline-block;
+            text-decoration: none;
+            color: white;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #0f3a1f;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(26, 77, 46, 0.3);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: var(--secondary-color);
+            color: var(--primary-color);
+        }
+
+        .btn-secondary:hover {
+            background: #8ae600;
+            color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(158, 255, 0, 0.3);
+        }
+
+        .btn-success {
+            background: var(--success-color);
+            color: var(--primary-color);
+        }
+
+        .btn-success:hover {
+            background: #8ae600;
+            color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(158, 255, 0, 0.3);
+        }
+
+        .btn-outline {
+            background: white;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .form-input, .form-textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-input:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        /* Checkboxes */
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin: 0.5rem 0;
+            padding: 0.75rem;
+            background: var(--light-bg);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .checkbox-container:hover {
+            background: #e2e8f0;
+        }
+
+        .checkbox {
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--primary-color);
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .checkbox:checked {
+            background: var(--primary-color);
+            position: relative;
+        }
+
+        .checkbox:checked::after {
+            content: '✓';
+            position: absolute;
+            color: white;
+            font-size: 16px;
+            left: 4px;
+            top: 0;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: var(--border-color);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient);
+            border-radius: 6px;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 8px;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        /* Accordion */
+        .accordion {
+            margin-bottom: 1rem;
+        }
+
+        .accordion-header {
+            background: white;
+            padding: 1rem 1.5rem;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .accordion-header:hover {
+            background: var(--light-bg);
+            border-color: var(--primary-color);
+        }
+
+        .accordion-header.active {
+            border-color: var(--primary-color);
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+
+        .accordion-content {
+            display: none;
+            padding: 1.5rem;
+            background: white;
+            border: 2px solid var(--primary-color);
+            border-top: none;
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+        }
+
+        .accordion-content.active {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Tables */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+
+        th {
+            background: var(--gradient);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        tr:hover td {
+            background: var(--light-bg);
+        }
+
+        /* Alert Boxes */
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            border-left: 4px solid;
+        }
+
+        .alert-info {
+            background: #dbeafe;
+            border-color: var(--primary-color);
+            color: #1e40af;
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            border-color: var(--success-color);
+            color: #065f46;
+        }
+
+        .alert-warning {
+            background: #fed7aa;
+            border-color: var(--warning-color);
+            color: #92400e;
+        }
+
+        .alert-danger {
+            background: #fee2e2;
+            border-color: var(--danger-color);
+            color: #991b1b;
+        }
+
+        /* Grid System */
+        .grid {
+            display: grid;
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+
+        .grid-3 {
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        }
+
+        /* Print Styles */
+        @media print {
+            .nav, .header, .btn, .progress-container {
+                display: none;
+            }
+
+            .section {
+                display: block !important;
+                page-break-after: always;
+            }
+
+            .card {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            body {
+                margin-left: 0;
+            }
+
+            .nav {
+                position: fixed;
+                top: 100px;
+                left: -250px;
+                transition: left 0.3s ease;
+                z-index: 1000;
+            }
+
+            .nav.mobile-open {
+                left: 0;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+
+            .nav-item {
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            /* Mobile Form Improvements */
+            input[type="text"],
+            input[type="email"],
+            input[type="number"],
+            textarea,
+            select {
+                min-height: 48px;
+                padding: 1rem;
+                font-size: 16px !important;  /* Prevents iOS zoom */
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            textarea {
+                min-height: 120px;
+            }
+
+            /* Stack labels vertically on mobile */
+            .form-group,
+            .worksheet-field {
+                display: flex;
+                flex-direction: column;
+                margin-bottom: 1.5rem;
+            }
+
+            label {
+                margin-bottom: 0.5rem;
+                font-weight: 600;
+                font-size: 0.95rem;
+                display: block;
+            }
+
+            /* Sticky action buttons at bottom */
+            .button-group {
+                position: sticky;
+                bottom: 0;
+                background: white;
+                padding: 1rem;
+                box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+                z-index: 100;
+                margin: 0 -1.5rem -1.5rem;
+            }
+
+            .button-group button,
+            .button-group .btn {
+                width: 100%;
+                margin-bottom: 0.5rem;
+                padding: 1rem;
+                font-size: 1rem;
+                display: block;
+            }
+
+            .button-group button:last-child {
+                margin-bottom: 0;
+            }
+        }
+
+        /* Tablet Responsive */
+        @media (max-width: 1024px) and (min-width: 769px) {
+            .nav {
+                width: 220px;
+            }
+
+            body {
+                margin-left: 220px;
+            }
+
+            .nav-item {
+                padding: 0.875rem 1.25rem;
+                font-size: 0.95rem;
+            }
+        }
+
+        /* Tabs within sections */
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border-color);
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 0.75rem 1.5rem;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--text-light);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .tab:hover {
+            color: var(--primary-color);
+        }
+
+        .tab.active {
+            color: var(--primary-color);
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--primary-color);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Score Display */
+        .score-display {
+            text-align: center;
+            padding: 2rem;
+            background: var(--gradient);
+            color: white;
+            border-radius: 12px;
+            margin: 2rem 0;
+        }
+
+        .score-number {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .score-label {
+            font-size: 1.2rem;
+            opacity: 0.95;
+        }
+
+        .score-interpretation {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+        }
+
+        /* Timer */
+        .timer {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            display: none;
+            align-items: center;
+            gap: 1rem;
+            z-index: 1000;
+        }
+
+        .timer.active {
+            display: flex;
+        }
+
+        .timer-display {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        /* Loading Animation */
+        .loader {
+            display: none;
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--border-color);
+            border-top-color: var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 2rem auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading {
+            display: block;
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: help;
+            color: var(--primary-color);
+            text-decoration: underline dotted;
+        }
+
+        .tooltip-text {
+            visibility: hidden;
+            width: 200px;
+            background-color: var(--dark-bg);
+            color: white;
+            text-align: center;
+            border-radius: 8px;
+            padding: 0.5rem;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.875rem;
+        }
+
+        .tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+
+       /* Login button in navigation */
+#loginButtonContainer {
+    padding: 1rem 1.5rem;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+#loginButtonContainer .btn-primary {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: var(--gradient);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: block;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(26, 77, 46, 0.2);
+}
+
+#loginButtonContainer .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(158, 255, 0, 0.3);
+    background: linear-gradient(135deg, #0f3a1f 0%, #8ae600 100%);
+}
+
+ .btn {
+    padding: 14px 24px;
+    background: linear-gradient(135deg, #1a4d2e 0%, #9eff00 100%);
+    color: #000000;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(158, 255, 0, 0.3);
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-content" style="display: flex; align-items: center; gap: 2rem;">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAfQAAAH0CAYAAADL1t+KAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAEu2lUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSfvu78nIGlkPSdXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQnPz4KPHg6eG1wbWV0YSB4bWxuczp4PSdhZG9iZTpuczptZXRhLyc+CjxyZGY6UkRGIHhtbG5zOnJkZj0naHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyc+CgogPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9JycKICB4bWxuczpBdHRyaWI9J2h0dHA6Ly9ucy5hdHRyaWJ1dGlvbi5jb20vYWRzLzEuMC8nPgogIDxBdHRyaWI6QWRzPgogICA8cmRmOlNlcT4KICAgIDxyZGY6bGkgcmRmOnBhcnNlVHlwZT0nUmVzb3VyY2UnPgogICAgIDxBdHRyaWI6Q3JlYXRlZD4yMDI1LTExLTAzPC9BdHRyaWI6Q3JlYXRlZD4KICAgICA8QXR0cmliOkV4dElkPjhhZWE5MzM1LWQwMjItNDM4Zi04N2Q2LWI0NTA5Y2Y2NGM3YjwvQXR0cmliOkV4dElkPgogICAgIDxBdHRyaWI6RmJJZD41MjUyNjU5MTQxNzk1ODA8L0F0dHJpYjpGYklkPgogICAgIDxBdHRyaWI6VG91Y2hUeXBlPjI8L0F0dHJpYjpUb3VjaFR5cGU+CiAgICA8L3JkZjpsaT4KICAgPC9yZGY6U2VxPgogIDwvQXR0cmliOkFkcz4KIDwvcmRmOkRlc2NyaXB0aW9uPgoKIDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PScnCiAgeG1sbnM6ZGM9J2h0dHA6Ly9wdXJsLm9yZy9kYy9lbGVtZW50cy8xLjEvJz4KICA8ZGM6dGl0bGU+CiAgIDxyZGY6QWx0PgogICAgPHJkZjpsaSB4bWw6bGFuZz0neC1kZWZhdWx0Jz5VbnRpdGxlZCBkZXNpZ24gLSAxPC9yZGY6bGk+CiAgIDwvcmRmOkFsdD4KICA8L2RjOnRpdGxlPgogPC9yZGY6RGVzY3JpcHRpb24+CgogPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9JycKICB4bWxuczpwZGY9J2h0dHA6Ly9ucy5hZG9iZS5jb20vcGRmLzEuMy8nPgogIDxwZGY6QXV0aG9yPkNpc2NhIFdoZWF0dDwvcGRmOkF1dGhvcj4KIDwvcmRmOkRlc2NyaXB0aW9uPgoKIDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PScnCiAgeG1sbnM6eG1wPSdodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvJz4KICA8eG1wOkNyZWF0b3JUb29sPkNhbnZhIChSZW5kZXJlcikgZG9jPURBRzNyQlZpOWhrIHVzZXI9VUFESHY3M01vNjQgYnJhbmQ9QkFESHY1blVHU00gdGVtcGxhdGU9PC94bXA6Q3JlYXRvclRvb2w+CiA8L3JkZjpEZXNjcmlwdGlvbj4KPC9yZGY6UkRGPgo8L3g6eG1wbWV0YT4KPD94cGFja2V0IGVuZD0ncic/PoI3WUoAAR6pSURBVHic7L15nGRpWef7+73nRERWZW1d1V1d1WtV941IQ3fTQLO1zSLQ0oDIjMAFBEQREJFx9+qM89Hh3tHRj8LgLqOIu6DARYEGGoZNQHGkQdam932pNTMiznnf5/7xPO85J6Mya8vqrsrI5/v5RGVEZGTEWSLO7712wnEcx3GcFQ+P9wY4juM4jrN8XNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3EcZwpwQXccx3GcKcAF3XEcx3GmABd0x3Ecx5kCXNAdx3Ec5/8DdN5njCJlL3UAAAAASUVORK5CYII=" alt="Prompted Logo" style="height: 80px; width: auto;">
+<div>
+<h1>Prompted: AI Mastery Platform - Education Edition</h1>
+<p>Developing Student AI Literacy in Your Classroom</p>
+</div>
+<button id="logout-btn" class="btn" type="button">Logout</button>
+</div>
+</div>
+
+<!-- Progress Tracker -->
+<div class="progress-container">
+    <div class="progress-header">
+        <span><strong>Your Progress:</strong> <span id="progressText">Getting Started</span></span>
+        <span id="progressPercentage">0%</span>
+    </div>
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+    </div>
+</div>
+
+<!-- Navigation -->
+<nav class="nav">
+    <div class="nav-container">
+        <div class="nav-item active" onclick="showSection('assessment')">📊 Assessment</div>
+        <div class="nav-item" onclick="showSection('activities')">🎨 Activities</div>
+        <div class="nav-item" onclick="showSection('worksheets')">📝 Worksheets</div>
+    </div>
+</nav>
+
+<!-- Main Container -->
+<div class="container">
+    <!-- Assessment Section -->
+    <div id="assessment" class="section active">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon">📊</div>
+                AI Literacy Self-Assessment for Students
+            </div>
+
+            <div class="alert alert-info">
+                Rate yourself on a scale of 1-5 (1=Never, 5=Always) to discover your AI mastery level
+            </div>
+
+            <h3 style="margin: 1.5rem 0 1rem; color: var(--primary-color);">Understanding AI Capabilities</h3>
+            <div class="assessment-item">
+                <span style="flex: 0 0 350px;">I understand what AI can and cannot do effectively</span>
+                <div class="slider-container">
+                    <input type="range" min="1" max="5" value="3" class="slider assessment-slider" data-category="understanding">
+                </div>
+                <span class="slider-value">3</span>
+            </div>
+
+            <div class="assessment-item">
+                <span style="flex: 0 0 350px;">I know that AI can make mistakes and present false information</span>
+                <div class="slider-container">
+                    <input type="range" min="1" max="5" value="3" class="slider assessment-slider" data-category="understanding">
+                </div>
+                <span class="slider-value">3</span>
+            </div>
+
+            <div class="assessment-item">
+                <span style="flex: 0 0 350px;">I understand that AI learns from existing data and may have biases</span>
+                <div class="slider-container">
+                    <input type="range" min="1" max="5" value="3" class="slider assessment-slider" data-category="understanding">
+                </div>
+                <span class="slider-value">3</span>
+            </div>
+
+            <div class="assessment-item">
+                <span style="flex: 0 0 350px;">I can explain how AI generates responses to my questions</span>
+                <div class="slider-container">
+                    <input type="range" min="1" max="5" value="3" class="slider assessment-slider" data-category="understanding">
+                </div>
+                <span class="slider-value">3</span>
+            </div>
+
+            <h3 style="margin: 1.5rem 0 1rem; color: var(--primary-color);">Strategic AI Use</h3>
+            <div class="assessment-item">
+                <span style="flex: 0 0 350px;">I use AI to help me think, not to think for me</span>
+                <div class="slider-container">
+                    <input type="range" min="1" max="5" value="3" class="slider assessment-slider" data-category="strategic">
+                </div>
+                <span class="slider-value">3</span>
+            </div>
+
+            <div class="assessment-item">
+                <span style="flex: 0 0 350px;">I verify important information from AI using other sources</span>
+                <div class="slider-container">
+                    <input type="range" min="1" max="5" value="3" class="slider assessment-slider" data-category="strategic">
+                </div>
+                <span class="slider-value">3</span>
+            </div>
+
+            <div class="assessment-item">
+                <span style="flex: 0 0 350px;">I ask specific, thoughtful questions rather than broad requests</span>
+                <div class="slider-container">
+                    <input type="range" min="1" max="5" value="3" class="slider assessment-slider" data-category="strategic">
+                </div>
+                <span class="slider-value">3</span>
+            </div>
+
+            <div class="assessment-item">
+                <span style="flex: 0 0 350px;">I build on AI responses with my own ideas and analysis</span>
+                <div class="slider-container">
+                    <input type="range" min="1" max="5" value="3" class="slider assessment-slider" data-category="strategic">
+                </div>
+                <span class="slider-value">3</span>
+            </div>
+
+            <h3 style="margin: 1.5rem 0 1rem; color: var(--primary-color);">Maintaining Ownership</h3>
+            <div class="assessment-item">
+                <span style="flex: 0 0 350px;">I can complete assignments without AI when required</span>
+                <div class="slider-container">
+                    <input type="range" min="1" max="5" value="3" class="slider assessment-slider" data-category="ownership">
+                </div>
+                <span class="slider-value">3</span>
+            </div>
+
+            <div class="assessment-item">
+                <span style="flex: 0 0 350px;">I feel confident in my own thinking abilities</span>
+                <div class="slider-container">
+                    <input type="range" min="1" max="5" value="3" class="slider assessment-slider" data-category="ownership">
+                </div>
+                <span class="slider-value">3</span>
+            </div>
+
+            <div class="assessment-item">
+                <span style="flex: 0 0 350px;">I use AI to enhance my work, not replace my effort</span>
+                <div class="slider-container">
+                    <input type="range" min="1" max="5" value="3" class="slider assessment-slider" data-category="ownership">
+                </div>
+                <span class="slider-value">3</span>
+            </div>
+
+            <div class="assessment-item">
+                <span style="flex: 0 0 350px;">I can explain what I learned from any AI-assisted work</span>
+                <div class="slider-container">
+                    <input type="range" min="1" max="5" value="3" class="slider assessment-slider" data-category="ownership">
+                </div>
+                <span class="slider-value">3</span>
+            </div>
+
+            <button class="btn btn-primary" onclick="calculateAssessmentScore()" style="margin-top: 2rem;">Calculate My AI Mastery Level</button>
+
+            <div id="assessmentResult" style="display: none; margin-top: 2rem;">
+                <div class="score-display">
+                    <div class="score-number" id="totalScore">0</div>
+                    <div class="score-label">Your AI Literacy Score</div>
+                    <div class="score-interpretation" id="scoreInterpretation"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Activities Section -->
+    <div id="activities" class="section">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon">🎨</div>
+                Interactive Classroom Activities
+            </div>
+
+            <div class="grid grid-2">
+                <div class="card" style="background: linear-gradient(135deg, #667eea22, #764ba222);">
+                    <h3 style="color: var(--primary-color);">🎭 AI Debate Protocol</h3>
+                    <p style="margin-top: 1rem;"><strong>Time:</strong> 50 minutes</p>
+                    <p><strong>Setup:</strong></p>
+                    <ul style="margin-top: 0.5rem;">
+                        <li>Group A: Argues position using AI assistance</li>
+                        <li>Group B: Argues position without AI</li>
+                        <li>Group C: Judges effectiveness</li>
+                    </ul>
+                    <p style="margin-top: 1rem;"><strong>Process:</strong></p>
+                    <ol style="margin-top: 0.5rem;">
+                        <li>Research phase (15 min)</li>
+                        <li>Argument development (10 min)</li>
+                        <li>Debate (15 min)</li>
+                        <li>Judgment and discussion (10 min)</li>
+                    </ol>
+                    <p style="margin-top: 1rem;"><strong>Debrief Questions:</strong></p>
+                    <ul style="margin-top: 0.5rem;">
+                        <li>Which arguments were stronger? Why?</li>
+                        <li>How did AI help or hinder?</li>
+                        <li>What did each group learn?</li>
+                    </ul>
+                </div>
+
+                <div class="card" style="background: linear-gradient(135deg, #10b98122, #065f4622);">
+                    <h3 style="color: var(--primary-color);">🔍 AI Error Hunt</h3>
+                    <p style="margin-top: 1rem;"><strong>Challenge:</strong> Find mistakes in AI responses</p>
+                    <p style="margin-top: 1rem;"><strong>Categories:</strong></p>
+                    <ul style="margin-top: 0.5rem;">
+                        <li>Historical facts</li>
+                        <li>Scientific explanations</li>
+                        <li>Mathematical solutions</li>
+                        <li>Literary analysis</li>
+                        <li>Current events</li>
+                    </ul>
+                    <p style="margin-top: 1rem;"><strong>Scoring System:</strong></p>
+                    <ul style="margin-top: 0.5rem;">
+                        <li>1 point: Identify error</li>
+                        <li>2 points: Explain why it's wrong</li>
+                        <li>3 points: Provide correct info with source</li>
+                    </ul>
+                </div>
+
+                <div class="card" style="background: linear-gradient(135deg, #f59e0b22, #92400e22);">
+                    <h3 style="color: var(--primary-color);">💬 Prompt Engineering Challenge</h3>
+                    <p style="margin-top: 1rem;"><strong>Task:</strong> Get AI to explain a concept to different audiences</p>
+                    <p style="margin-top: 1rem;"><strong>Target Audiences:</strong></p>
+                    <ul style="margin-top: 0.5rem;">
+                        <li>5-year-old child</li>
+                        <li>Expert in the field</li>
+                        <li>ESL speaker</li>
+                        <li>Visual learner</li>
+                        <li>Someone with opposing viewpoint</li>
+                    </ul>
+                    <p style="margin-top: 1rem;"><strong>Evaluation:</strong> Which prompts produced most effective responses for each audience?</p>
+                </div>
+
+                <div class="card" style="background: linear-gradient(135deg, #2563eb22, #1e40af22);">
+                    <h3 style="color: var(--primary-color);">🎯 AI vs Human Challenge</h3>
+                    <p style="margin-top: 1rem;"><strong>Format:</strong> Side-by-side comparison</p>
+                    <p style="margin-top: 1rem;"><strong>Tasks to Compare:</strong></p>
+                    <ul style="margin-top: 0.5rem;">
+                        <li>Creative writing</li>
+                        <li>Problem solving</li>
+                        <li>Research summary</li>
+                        <li>Argument construction</li>
+                    </ul>
+                    <p style="margin-top: 1rem;"><strong>Discussion Points:</strong></p>
+                    <ul style="margin-top: 0.5rem;">
+                        <li>What are human strengths?</li>
+                        <li>Where does AI excel?</li>
+                        <li>How can they work together?</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Worksheets Section -->
+    <div id="worksheets" class="section">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon">📝</div>
+                Interactive Student Worksheets
+            </div>
+
+            <div class="tabs">
+                <button class="tab active" onclick="showTab('worksheets', 'interaction-log')">AI Interaction Log</button>
+                <button class="tab" onclick="showTab('worksheets', 'prompt-practice')">Prompt Practice</button>
+                <button class="tab" onclick="showTab('worksheets', 'error-detection')">Error Detection</button>
+                <button class="tab" onclick="showTab('worksheets', 'weekly-check')">Weekly Check</button>
+            </div>
+
+            <div id="interaction-log-tab" class="tab-content active">
+                <h3 style="color: var(--primary-color);">AI Interaction Log</h3>
+                
+                <div class="card" style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); border-left: 4px solid var(--primary-color); margin-bottom: 1.5rem;">
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                        <span style="font-size: 2rem;">👨‍🎓</span>
+                        <div>
+                            <h4 style="margin: 0; color: var(--primary-color);">Student Tool</h4>
+                            <p style="margin: 0.25rem 0 0 0; color: #666; font-size: 0.9rem;">Complete after each AI-assisted assignment</p>
+                        </div>
+                    </div>
+                    <p style="margin: 0; line-height: 1.6;"><strong>Purpose:</strong> This log helps you reflect on HOW you used AI and WHAT you learned.</p>
+                </div>
+
+                <div class="card" style="background: #fff3e0; border-left: 4px solid #ff9800; margin-bottom: 1.5rem;">
+                    <h4 style="color: #e65100; margin-top: 0;">📋 How to Use This Log</h4>
+                    <ol style="margin: 0; padding-left: 1.5rem; line-height: 1.8;">
+                        <li>Fill out AFTER completing your assignment</li>
+                        <li>Be honest about your process</li>
+                        <li>Distinguish AI help from your work</li>
+                        <li>Reflect deeply on learning</li>
+                        <li>Save your log for future reference</li>
+                    </ol>
+                </div>
+                
+                <form id="interactionForm">
+                    <div class="form-group">
+                        <label class="form-label">Date</label>
+                        <input type="date" class="form-input" id="interaction-date">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Subject</label>
+                        <select class="form-input" id="interaction-subject">
+                            <option value="">Select subject...</option>
+                            <option value="english">English/Language Arts</option>
+                            <option value="math">Mathematics</option>
+                            <option value="science">Science</option>
+                            <option value="history">History/Social Studies</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Assignment</label>
+                        <input type="text" class="form-input" id="interaction-assignment" placeholder="What assignment were you working on?">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">My Learning Goal</label>
+                        <textarea class="form-textarea" id="interaction-goal" placeholder="What did you want to learn or accomplish?"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">AI Prompts I Used</label>
+                        <textarea class="form-textarea" id="interaction-prompts" placeholder="List the prompts you used with AI..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">What AI Helped With</label>
+                        <textarea class="form-textarea" id="interaction-helped" placeholder="How did AI assist you?"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">What I Did Independently</label>
+                        <textarea class="form-textarea" id="interaction-independent" placeholder="What work did you complete on your own?"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Information I Verified</label>
+                        <textarea class="form-textarea" id="interaction-verified" placeholder="What claims did you fact-check and how?"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">My Original Ideas</label>
+                        <textarea class="form-textarea" id="interaction-original" placeholder="What ideas were uniquely yours?"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Reflection</label>
+                        <textarea class="form-textarea" id="interaction-reflection" placeholder="How did AI help or hinder your learning?"></textarea>
+                    </div>
+
+                    <button type="button" class="btn btn-primary" onclick="saveInteractionLog()">Save Log Entry</button>
+                </form>
+            </div>
+
+            <!-- Other worksheet tabs would follow similar pattern... -->
+            <div id="prompt-practice-tab" class="tab-content">
+                <h3 style="color: var(--primary-color);">Prompt Engineering Practice</h3>
+                <p>Content for Prompt Practice worksheet...</p>
+            </div>
+
+            <div id="error-detection-tab" class="tab-content">
+                <h3 style="color: var(--primary-color);">AI Error Detection Record</h3>
+                <p>Content for Error Detection worksheet...</p>
+            </div>
+
+            <div id="weekly-check-tab" class="tab-content">
+                <h3 style="color: var(--primary-color);">Weekly AI Mastery Self-Check</h3>
+                <p>Content for Weekly Check worksheet...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+
+    let supabase;
+
+    // Initialize Supabase
+    async function initSupabase() {
+        console.log('Initializing Supabase...');
+        try {
+            const supabaseUrl = localStorage.getItem('SUPABASE_URL');
+            const supabaseAnonKey = localStorage.getItem('SUPABASE_ANON_KEY');
+            
+            console.log('Supabase URL:', supabaseUrl);
+            console.log('Supabase Key exists:', !!supabaseAnonKey);
+            
+            if (!supabaseUrl || !supabaseAnonKey) {
+                throw new Error('Missing Supabase configuration');
+            }
+            
+            supabase = window.supabase.createClient(supabaseUrl, supabaseAnonKey);
+            console.log('Supabase initialized successfully');
+        } catch (error) {
+            console.error('Failed to initialize Supabase:', error);
+        }
+    }
+    
+    async function checkSession() {
+            if (!supabase) return;
+            
+            const { data: { session } } = await supabase.auth.getSession();
+            const authBtn = document.getElementById('logout-btn');
+            
+            if (session) {
+                // User is logged in - show logout button
+                authBtn.textContent = 'Logout';
+                authBtn.onclick = handleLogout;
+            } else {
+                // User is not logged in - show login button
+                window.location.href = 'index.html';
+
+            }
+        }
+
+    // Logout function
+    async function handleLogout() {
+    console.log('Logout button clicked!');
+    console.log('Supabase client exists:', !!supabase);
+    
+    if (!supabase) {
+        alert('Still initializing. Please wait.');
+        return;
+    }
+
+    const btn = document.getElementById('logout-btn');
+    btn.disabled = true;
+    btn.textContent = 'Logging out...';
+
+    try {
+        console.log('Attempting to sign out...');
+        const { error } = await supabase.auth.signOut();
+        
+        if (error) throw error;
+
+        console.log('Sign out successful, clearing localStorage and redirecting...');
+        
+        // Clear Supabase credentials from localStorage
+        localStorage.removeItem('SUPABASE_URL');
+        localStorage.removeItem('SUPABASE_ANON_KEY');
+        
+        // Or clear ALL localStorage (if you want to clear everything):
+        // localStorage.clear();
+        
+        // Redirect to index.html after successful logout
+        window.location.href = 'index.html';
+        
+    } catch (error) {
+        console.error('Logout error:', error);
+        alert('Error logging out. Please try again.');
+        btn.disabled = false;
+        btn.textContent = 'Logout';
+    }
+}
+
+
+    // Initialize on page load
+    window.addEventListener('load', async () => {
+        console.log('Page loaded');
+        await initSupabase();
+        await checkSession();
+        // Add logout button listener
+        const logoutBtn = document.getElementById('logout-btn');
+        console.log('Logout button found:', !!logoutBtn);
+        
+        if (logoutBtn) {
+            
+            logoutBtn.addEventListener('click', handleLogout);
+            console.log('Click listener attached to logout button');
+        }
+    });
+    // Navigation functionality
+    function showSection(sectionId) {
+        const sections = document.querySelectorAll('.section');
+        sections.forEach(section => {
+            section.classList.remove('active');
+            section.style.display = 'none';
+        });
+
+        const selectedSection = document.getElementById(sectionId);
+        if (selectedSection) {
+            selectedSection.classList.add('active');
+            selectedSection.style.display = 'block';
+        }
+
+        const navItems = document.querySelectorAll('.nav-item');
+        navItems.forEach(item => item.classList.remove('active'));
+        event.target.classList.add('active');
+
+        updateProgress();
+        window.scrollTo(0, 0);
+    }
+
+    // Tab functionality
+    function showTab(section, tabName) {
+        const tabContents = document.querySelectorAll(`#${section} .tab-content`);
+        tabContents.forEach(content => content.classList.remove('active'));
+
+        const selectedTab = document.getElementById(`${tabName}-tab`);
+        if (selectedTab) selectedTab.classList.add('active');
+
+        const tabs = event.target.parentElement.querySelectorAll('.tab');
+        tabs.forEach(tab => tab.classList.remove('active'));
+        event.target.classList.add('active');
+    }
+
+    // Slider functionality
+    document.querySelectorAll('.slider').forEach(slider => {
+        slider.addEventListener('input', function() {
+            const valueDisplay = this.parentElement.parentElement.querySelector('.slider-value');
+            if (valueDisplay) {
+                valueDisplay.textContent = this.value;
+            }
+        });
+    });
+
+    // Assessment calculation
+    function calculateAssessmentScore() {
+        const sliders = document.querySelectorAll('.assessment-slider');
+        let total = 0;
+        sliders.forEach(slider => {
+            total += parseInt(slider.value);
+        });
+
+        const scoreElement = document.getElementById('totalScore');
+        const interpretationElement = document.getElementById('scoreInterpretation');
+        const resultElement = document.getElementById('assessmentResult');
+
+        scoreElement.textContent = total;
+        
+        let interpretation = '';
+        if (total >= 48) {
+            interpretation = 'AI Master - You use AI strategically while maintaining ownership of your learning!';
+        } else if (total >= 36) {
+            interpretation = 'AI Collaborator - You\'re developing good habits but could refine your approach.';
+        } else if (total >= 24) {
+            interpretation = 'AI Dependent Risk - You may be relying too heavily on AI. Focus on building independent skills.';
+        } else {
+            interpretation = 'AI Dependent - Focus on building independent thinking skills and using AI more strategically.';
+        }
+
+        interpretationElement.textContent = interpretation;
+        resultElement.style.display = 'block';
+        
+        updateProgress();
+    }
+
+    // Progress tracking
+    function updateProgress() {
+        const totalSections = 3;
+        let completedSections = 0;
+
+        if (document.getElementById('assessmentResult').style.display === 'block') {
+            completedSections++;
+        }
+
+        const percentage = Math.round((completedSections / totalSections) * 100);
+        
+        document.getElementById('progressFill').style.width = percentage + '%';
+        document.getElementById('progressPercentage').textContent = percentage + '%';
+        
+        let progressText = 'Getting Started';
+        if (percentage >= 75) progressText = 'Almost Complete!';
+        else if (percentage >= 50) progressText = 'Making Great Progress';
+        else if (percentage >= 25) progressText = 'Building Momentum';
+        
+        document.getElementById('progressText').textContent = progressText;
+    }
+
+    // Form saving
+    function saveInteractionLog() {
+        alert('Interaction Log Saved! (This would save to local storage in production)');
+        updateProgress();
+    }
+</script>
+
+
+</html>
