@@ -300,7 +300,9 @@
     </div>
 
     <script type="module">
+    import { supabase } from './src/auth.js';
 
+    // Helper functions - ONLY DECLARE ONCE
     function showForm(formType) {
         const loginForm = document.getElementById('login-form');
         const signupForm = document.getElementById('signup-form');
@@ -327,8 +329,6 @@
             alert.classList.remove('show');
         }, 5000);
     }
-
-      import { supabase } from './src/auth.js';
 
     async function checkExistingSession() {
         if (!supabase) return;
@@ -344,48 +344,21 @@
 
             if (profile?.role === 'teacher') {
                 window.location.href = '/Prompted-AI-Mastery/teacher-view.html';
-                
             } 
             else if (profile?.role === 'student') {
-                window.location.href = '/Prompted-AI-Mastery/student-view.html';}
+                window.location.href = '/Prompted-AI-Mastery/student-view.html';
+            }
             else {
                 window.location.href = '/Prompted-AI-Mastery/index.html';
             }
         }
     }
 
-    function showForm(formType) {
-        const loginForm = document.getElementById('login-form');
-        const signupForm = document.getElementById('signup-form');
-        const tabs = document.querySelectorAll('.tab-btn');
-
-        tabs.forEach(tab => tab.classList.remove('active'));
-
-        if (formType === 'login') {
-            loginForm.classList.add('active');
-            signupForm.classList.remove('active');
-            tabs[0].classList.add('active');
-        } else {
-            signupForm.classList.add('active');
-            loginForm.classList.remove('active');
-            tabs[1].classList.add('active');
-        }
-    }
-
-    function showAlert(message, type) {
-        const alert = document.getElementById('alert');
-        alert.className = `alert alert-${type} show`;
-        alert.textContent = message;
-        setTimeout(() => {
-            alert.classList.remove('show');
-        }, 5000);
-    }
-
     // Initialize on page load
     window.addEventListener('load', () => {
-        initSupabase();
+        checkExistingSession(); // Check for existing session
         
-        // Setup tab switching AFTER DOM is ready
+        // Setup tab switching
         document.querySelectorAll('.tab-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -395,13 +368,9 @@
         });
     });
 
+    // Login form handler
     document.getElementById('login-form').addEventListener('submit', async (e) => {
         e.preventDefault();
-        
-        if (!supabase) {
-            showAlert('Still initializing. Please wait a moment.', 'error');
-            return;
-        }
         
         const btn = document.getElementById('login-btn');
         btn.disabled = true;
@@ -428,9 +397,9 @@
 
             setTimeout(() => {
                 if (profile?.role === 'teacher') {
-                    window.location.href = '/teacher-view.html';
+                    window.location.href = '/Prompted-AI-Mastery/teacher-view.html';
                 } else {
-                    window.location.href = '/student-view.html';
+                    window.location.href = '/Prompted-AI-Mastery/student-view.html';
                 }
             }, 1500);
 
@@ -441,13 +410,9 @@
         }
     });
 
+    // Signup form handler
     document.getElementById('signup-form').addEventListener('submit', async (e) => {
         e.preventDefault();
-        
-        if (!supabase) {
-            showAlert('Still initializing. Please wait a moment.', 'error');
-            return;
-        }
         
         const btn = document.getElementById('signup-btn');
         btn.disabled = true;
@@ -491,30 +456,18 @@
                 ]);
 
             if (profileError) throw profileError;
+            
             alert('✅ Account Created Successfully!\n\n📧 IMPORTANT: Please check your email to confirm your account before logging in.\n\n💡 Check your spam/junk folder if you don\'t see the email.\n\nYou will be redirected to the login page in a moment.');
 
             showAlert('Account created! Please check your email to verify.', 'success');
             
             document.getElementById('signup-form').reset();
-            // Reset button state
-btn.disabled = false;
-btn.textContent = 'Create Account';
+            btn.disabled = false;
+            btn.textContent = 'Create Account';
 
-// Redirect to login form
-setTimeout(() => {
-    // Hide signup form
-    const signupForm = document.getElementById('signup-form').parentElement;
-    if (signupForm) signupForm.style.display = 'none';
-    
-    // Show login form
-    const loginForm = document.getElementById('login-form').parentElement;
-    if (loginForm) loginForm.style.display = 'block';
-    
-    // Or if showForm function exists, use it
-    if (typeof showForm === 'function') {
-        showForm('login');
-    }
-}, 2000);
+            setTimeout(() => {
+                showForm('login');
+            }, 2000);
 
         } catch (error) {
             console.error('Full error:', error);
@@ -524,13 +477,9 @@ setTimeout(() => {
         }
     });
 
-    async function handleForgotPassword(e) {
+    // Forgot password handler
+    window.handleForgotPassword = async function(e) {
         e.preventDefault();
-        
-        if (!supabase) {
-            showAlert('Still initializing. Please wait a moment.', 'error');
-            return;
-        }
         
         const email = prompt('Enter your email address:');
         
