@@ -299,8 +299,7 @@
         </form>
     </div>
 
-    <script>
-    let supabase;
+    <script type="module">
 
     function showForm(formType) {
         const loginForm = document.getElementById('login-form');
@@ -329,22 +328,7 @@
         }, 5000);
     }
 
-    async function initSupabase() {
-        try {
-            const supabaseUrl = localStorage.getItem('SUPABASE_URL');
-            const supabaseAnonKey = localStorage.getItem('SUPABASE_ANON_KEY');
-            
-            if (!supabaseUrl || !supabaseAnonKey) {
-                throw new Error('Missing Supabase environment variables. Set them in localStorage first.');
-            }
-            
-            supabase = window.supabase.createClient(supabaseUrl, supabaseAnonKey);
-            checkExistingSession();
-        } catch (error) {
-            console.error('Failed to initialize Supabase:', error);
-            showAlert('Configuration error. Please try again later.', 'error');
-        }
-    }
+      import { supabase } from './src/auth.js';
 
     async function checkExistingSession() {
         if (!supabase) return;
