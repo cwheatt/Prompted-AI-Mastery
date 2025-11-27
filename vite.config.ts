@@ -18,8 +18,7 @@ export default defineConfig({
     emptyOutDir: true,
     rollupOptions: {
       input: {
-        main: resolve(__dirname, 'client/index.html'),
-        auth: resolve(__dirname, 'client/auth.js'), 
+        main: resolve(__dirname, 'client/index.html')
       },
       output: {
         entryFileNames: (chunkInfo) => {
