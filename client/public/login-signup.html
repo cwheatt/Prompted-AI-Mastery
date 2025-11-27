@@ -507,14 +507,30 @@
                 ]);
 
             if (profileError) throw profileError;
+            alert('✅ Account Created Successfully!\n\n📧 IMPORTANT: Please check your email to confirm your account before logging in.\n\n💡 Check your spam/junk folder if you don\'t see the email.\n\nYou will be redirected to the login page in a moment.');
 
             showAlert('Account created! Please check your email to verify.', 'success');
             
             document.getElementById('signup-form').reset();
-            
-            setTimeout(() => {
-                showForm('login');
-            }, 3000);
+            // Reset button state
+btn.disabled = false;
+btn.textContent = 'Create Account';
+
+// Redirect to login form
+setTimeout(() => {
+    // Hide signup form
+    const signupForm = document.getElementById('signup-form').parentElement;
+    if (signupForm) signupForm.style.display = 'none';
+    
+    // Show login form
+    const loginForm = document.getElementById('login-form').parentElement;
+    if (loginForm) loginForm.style.display = 'block';
+    
+    // Or if showForm function exists, use it
+    if (typeof showForm === 'function') {
+        showForm('login');
+    }
+}, 2000);
 
         } catch (error) {
             console.error('Full error:', error);
