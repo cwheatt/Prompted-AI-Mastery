@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Dashboard - Prompted</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root {
+            --primary: #1a4d2e;
+            --accent: #9eff00;
+            --bg-light: #E8F4ED;
+            --bg-dark: #0a1f14;
+            --text-dark: #000000;
+            --text-light: #1a4d2e;
+            --card-bg: #ffffff;
+            --border: #9eff00;
+            --success: #22c55e;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, #2a6d4e 100%);
+            padding: 30px 0;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 20px rgba(26, 77, 46, 0.2);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo {
+            font-size: 36px;
+        }
+
+        h1 {
+            color: white;
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            color: var(--accent);
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .logout-btn {
+            background: white;
+            color: var(--primary);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            border: 2px solid var(--border);
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(26, 77, 46, 0.15);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .stat-title {
+            font-size: 14px;
+            color: var(--text-light);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-icon {
+            font-size: 24px;
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .section {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            border: 2px solid var(--border);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid var(--accent);
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: var(--text-dark);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(158, 255, 0, 0.3);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 13px;
+        }
+
+        .code-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        label {
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 14px;
+        }
+
+        input, select {
+            padding: 12px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(26, 77, 46, 0.1);
+        }
+
+        .code-grid {
+            display: grid;
+            gap: 16px;
+        }
+
+        .code-card {
+            background: linear-gradient(135deg, #ffffff 0%, var(--bg-light) 100%);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+        }
+
+        .code-card:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 16px rgba(26, 77, 46, 0.15);
+        }
+
+        .code-info {
+            flex: 1;
+        }
+
+        .code-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            font-family: 'Courier New', monospace;
+            letter-spacing: 2px;
+        }
+
+        .code-meta {
+            display: flex;
+            gap: 20px;
+            margin-top: 8px;
+            font-size: 13px;
+            color: var(--text-light);
+        }
+
+        .code-meta span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-active {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge-inactive {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .code-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: var(--bg-light);
+            padding: 16px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--primary);
+            border-bottom: 2px solid var(--border);
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 16px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        tr:hover {
+            background: var(--bg-light);
+        }
+
+        .alert {
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            border-left: 4px solid var(--success);
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border-left: 4px solid var(--danger);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-light);
+        }
+
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .copy-btn {
+            background: none;
+            border: 2px solid var(--border);
+            color: var(--primary);
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .copy-btn:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: var(--text-dark);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-light);
+        }
+
+        .spinner {
+            border: 3px solid var(--bg-light);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .code-form {
+                grid-template-columns: 1fr;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+
+            .code-card {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+
+            .code-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="header-left">
+                <div class="logo">🎯</div>
+                <div>
+                    <h1>Teacher Dashboard</h1>
+                    <p class="subtitle">Manage Access Codes & Students</p>
+                </div>
+            </div>
+            <button class="logout-btn" onclick="handleLogout()">Logout</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <div id="alert" class="alert"></div>
+
+        <!-- Stats Overview -->
+        <div class="dashboard-grid">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <span class="stat-title">Total Students</span>
+                    <span class="stat-icon">👥</span>
+                </div>
+                <div class="stat-value" id="total-students">-</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <span class="stat-title">Active Codes</span>
+                    <span class="stat-icon">🔑</span>
+                </div>
+                <div class="stat-value" id="active-codes">-</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <span class="stat-title">Codes Used</span>
+                    <span class="stat-icon">✅</span>
+                </div>
+                <div class="stat-value" id="codes-used">-</div>
+            </div>
+        </div>
+
+        <!-- Generate Access Code Section -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">Generate Access Code</h2>
+            </div>
+
+            <form id="code-form" class="code-form">
+                <div class="form-group">
+                    <label for="code-description">Description</label>
+                    <input type="text" id="code-description" placeholder="e.g., Spring 2024 Class" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="max-uses">Max Uses (optional)</label>
+                    <input type="number" id="max-uses" placeholder="Leave empty for unlimited" min="1">
+                </div>
+
+                <div class="form-group">
+                    <label for="expires-in">Expires In</label>
+                    <select id="expires-in">
+                        <option value="">Never</option>
+                        <option value="7">7 Days</option>
+                        <option value="30">30 Days</option>
+                        <option value="90">90 Days</option>
+                        <option value="365">1 Year</option>
+                    </select>
+                </div>
+
+                <div class="form-group" style="display: flex; align-items: flex-end;">
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        🔑 Generate Code
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Access Codes List -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">Access Codes</h2>
+            </div>
+            <div id="codes-container">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Loading codes...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Students List -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">Students</h2>
+            </div>
+            <div id="students-container">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Loading students...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let supabase;
+        let currentTeacherId;
+
+        async function initSupabase() {
+            try {
+                const supabaseUrl = localStorage.getItem('SUPABASE_URL');
+                const supabaseAnonKey = localStorage.getItem('SUPABASE_ANON_KEY');
+                
+                if (!supabaseUrl || !supabaseAnonKey) {
+                    throw new Error('Missing Supabase configuration');
+                }
+                
+                supabase = window.supabase.createClient(supabaseUrl, supabaseAnonKey);
+                
+                // Check authentication
+                const { data: { session } } = await supabase.auth.getSession();
+                
+                if (!session) {
+                    window.location.href = '/login-signup.html';
+                    return;
+                }
+
+                // Verify user is a teacher
+                const { data: profile } = await supabase
+                    .from('profiles')
+                    .select('role')
+                    .eq('id', session.user.id)
+                    .single();
+
+                if (profile?.role !== 'teacher') {
+                    showAlert('Access denied. Teachers only.', 'error');
+                    setTimeout(() => window.location.href = '/login.html', 2000);
+                    return;
+                }
+
+                currentTeacherId = session.user.id;
+                
+                // Load dashboard data
+                await loadDashboardData();
+                
+            } catch (error) {
+                console.error('Initialization error:', error);
+                showAlert('Failed to initialize dashboard', 'error');
+            }
+        }
+
+        async function loadDashboardData() {
+            await Promise.all([
+                loadStats(),
+                loadAccessCodes(),
+                loadStudents()
+            ]);
+        }
+
+        async function loadStats() {
+            try {
+                // Get total students
+                const { data: students } = await supabase
+                    .from('profiles')
+                    .select('id')
+                    .eq('role', 'student');
+
+                // Get active codes
+                const { data: codes } = await supabase
+                    .from('access_codes')
+                    .select('*')
+                    .eq('teacher_id', currentTeacherId)
+                    .eq('is_active', true);
+
+                // Calculate codes used
+                let totalUsed = 0;
+                if (codes) {
+                    totalUsed = codes.reduce((sum, code) => sum + (code.used_count || 0), 0);
+                }
+
+                document.getElementById('total-students').textContent = students?.length || 0;
+                document.getElementById('active-codes').textContent = codes?.length || 0;
+                document.getElementById('codes-used').textContent = totalUsed;
+                
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+
+        async function loadAccessCodes() {
+            const container = document.getElementById('codes-container');
+            
+            try {
+                const { data: codes, error } = await supabase
+                    .from('access_codes')
+                    .select('*')
+                    .eq('teacher_id', currentTeacherId)
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                if (!codes || codes.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">🔑</div>
+                            <p>No access codes yet. Generate your first code above!</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = '<div class="code-grid">' + codes.map(code => {
+                    const isExpired = code.expires_at && new Date(code.expires_at) < new Date();
+                    const isMaxedOut = code.max_uses && code.used_count >= code.max_uses;
+                    const isActive = code.is_active && !isExpired && !isMaxedOut;
+                    
+                    return `
+                        <div class="code-card">
+                            <div class="code-info">
+                                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+                                    <div class="code-value">${code.code}</div>
+                                    <span class="badge ${isActive ? 'badge-active' : 'badge-inactive'}">
+                                        ${isActive ? 'Active' : 'Inactive'}
+                                    </span>
+                                </div>
+                                <div style="margin-bottom: 8px; color: var(--text-light); font-weight: 600;">
+                                    ${code.description}
+                                </div>
+                                <div class="code-meta">
+                                    <span>📊 Used: ${code.used_count}${code.max_uses ? '/' + code.max_uses : ''}</span>
+                                    ${code.expires_at ? `<span>📅 Expires: ${new Date(code.expires_at).toLocaleDateString()}</span>` : '<span>⏰ Never expires</span>'}
+                                </div>
+                            </div>
+                            <div class="code-actions">
+                                <button class="copy-btn" onclick="copyCode('${code.code}')">
+                                    📋 Copy
+                                </button>
+                                <button class="btn btn-danger btn-small" onclick="deactivateCode('${code.id}')">
+                                    Deactivate
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('') + '</div>';
+
+            } catch (error) {
+                console.error('Error loading codes:', error);
+                container.innerHTML = '<p style="color: var(--danger);">Error loading codes</p>';
+            }
+        }
+
+        async function loadStudents() {
+            const container = document.getElementById('students-container');
+            
+            try {
+                // Get all students and their access codes
+                const { data: students, error } = await supabase
+                    .from('profiles')
+                    .select('*')
+                    .eq('role', 'student')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                if (!students || students.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">👥</div>
+                            <p>No students registered yet</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = `
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Access Code Used</th>
+                                    <th>Joined Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${students.map(student => `
+                                    <tr>
+                                        <td><strong>${student.full_name}</strong></td>
+                                        <td>${student.email}</td>
+                                        <td><code style="background: var(--bg-light); padding: 4px 8px; border-radius: 4px;">${student.access_code_used || 'N/A'}</code></td>
+                                        <td>${new Date(student.created_at).toLocaleDateString()}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+
+            } catch (error) {
+                console.error('Error loading students:', error);
+                container.innerHTML = '<p style="color: var(--danger);">Error loading students</p>';
+            }
+        }
+
+        // Generate new access code
+        document.getElementById('code-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const description = document.getElementById('code-description').value;
+            const maxUses = document.getElementById('max-uses').value;
+            const expiresIn = document.getElementById('expires-in').value;
+            
+            // Generate random 8-character code
+            const code = generateCode();
+            
+            let expiresAt = null;
+            if (expiresIn) {
+                expiresAt = new Date();
+                expiresAt.setDate(expiresAt.getDate() + parseInt(expiresIn));
+            }
+            
+            try {
+                const { error } = await supabase
+                    .from('access_codes')
+                    .insert([{
+                        code: code,
+                        teacher_id: currentTeacherId,
+                        description: description,
+                        max_uses: maxUses ? parseInt(maxUses) : null,
+                        expires_at: expiresAt,
+                        is_active: true,
+                        used_count: 0
+                    }]);
+
+                if (error) throw error;
+
+                showAlert(`Access code "${code}" created successfully!`, 'success');
+                document.getElementById('code-form').reset();
+                await loadDashboardData();
+                
+            } catch (error) {
+                console.error('Error creating code:', error);
+                showAlert('Failed to create access code', 'error');
+            }
+        });
+
+        function generateCode() {
+            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+            let code = '';
+            for (let i = 0; i < 8; i++) {
+                code += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return code;
+        }
+
+        async function deactivateCode(codeId) {
+            if (!confirm('Are you sure you want to deactivate this code?')) return;
+            
+            try {
+                const { error } = await supabase
+                    .from('access_codes')
+                    .update({ is_active: false })
+                    .eq('id', codeId);
+
+                if (error) throw error;
+
+                showAlert('Code deactivated successfully', 'success');
+                await loadDashboardData();
+                
+            } catch (error) {
+                console.error('Error deactivating code:', error);
+                showAlert('Failed to deactivate code', 'error');
+            }
+        }
+
+        async function copyCode(code) {
+            try {
+                await navigator.clipboard.writeText(code);
+                showAlert('Code copied to clipboard!', 'success');
+            } catch (error) {
+                showAlert('Failed to copy code', 'error');
+            }
+        }
+
+        function showAlert(message, type) {
+            const alert = document.getElementById('alert');
+            alert.className = `alert alert-${type} show`;
+            alert.textContent = message;
+            setTimeout(() => {
+                alert.classList.remove('show');
+            }, 5000);
+        }
+
+        async function handleLogout() {
+            try {
+                await supabase.auth.signOut();
+                window.location.href = '/login.html';
+            } catch (error) {
+                console.error('Logout error:', error);
+            }
+        }
+
+        // Initialize on page load
+        window.addEventListener('load', initSupabase);
+    </script>
+</body>
+</html>

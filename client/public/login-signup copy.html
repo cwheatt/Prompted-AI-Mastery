@@ -153,35 +153,6 @@
             display: block;
         }
 
-        .access-code-field {
-            display: none;
-        }
-
-        .access-code-field.show {
-            display: block;
-            animation: slideDown 0.3s ease-out;
-        }
-
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                max-height: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                max-height: 100px;
-                transform: translateY(0);
-            }
-        }
-
-        .info-text {
-            font-size: 12px;
-            color: var(--text-light);
-            margin-top: 5px;
-            font-style: italic;
-        }
-
         .btn {
             width: 100%;
             padding: 14px;
@@ -262,24 +233,6 @@
         #login-form.active {
             display: block !important;
         }
-
-        .teacher-link {
-            text-align: center;
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid var(--border-color);
-        }
-
-        .teacher-link a {
-            color: var(--primary-color);
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        .teacher-link a:hover {
-            text-decoration: underline;
-        }
     </style>
 </head>
 <body>
@@ -342,17 +295,8 @@
                 </select>
             </div>
 
-            <!-- Access Code Field (only shows for students) -->
-            <div class="form-group access-code-field" id="access-code-group">
-                <label>Access Code</label>
-                <input type="text" id="signup-access-code" placeholder="Enter code from your teacher" maxlength="8">
-                <p class="info-text">Ask your teacher for an access code to join the platform</p>
-            </div>
-
             <button type="submit" class="btn" id="signup-btn">Create Account</button>
         </form>
-
-
     </div>
 
     <script>
@@ -415,35 +359,49 @@
                 .single();
 
             if (profile?.role === 'teacher') {
-                window.location.href = '/teacher-view.html';
-            } else if (profile?.role === 'student') {
-                window.location.href = '/student-view.html';
-            } else {
-                window.location.href = '/index.html';
+                window.location.href = '/Prompted-AI-Mastery/teacher-view.html';
+                
+            } 
+            else if (profile?.role === 'student') {
+                window.location.href = '/Prompted-AI-Mastery/student-view.html';}
+            else {
+                window.location.href = '/Prompted-AI-Mastery/index.html';
             }
         }
     }
 
-    // Show/hide access code field based on role selection
-    document.getElementById('signup-role').addEventListener('change', function() {
-        const accessCodeGroup = document.getElementById('access-code-group');
-        const accessCodeInput = document.getElementById('signup-access-code');
-        
-        if (this.value === 'student') {
-            accessCodeGroup.classList.add('show');
-            accessCodeInput.required = true;
+    function showForm(formType) {
+        const loginForm = document.getElementById('login-form');
+        const signupForm = document.getElementById('signup-form');
+        const tabs = document.querySelectorAll('.tab-btn');
+
+        tabs.forEach(tab => tab.classList.remove('active'));
+
+        if (formType === 'login') {
+            loginForm.classList.add('active');
+            signupForm.classList.remove('active');
+            tabs[0].classList.add('active');
         } else {
-            accessCodeGroup.classList.remove('show');
-            accessCodeInput.required = false;
-            accessCodeInput.value = '';
+            signupForm.classList.add('active');
+            loginForm.classList.remove('active');
+            tabs[1].classList.add('active');
         }
-    });
+    }
+
+    function showAlert(message, type) {
+        const alert = document.getElementById('alert');
+        alert.className = `alert alert-${type} show`;
+        alert.textContent = message;
+        setTimeout(() => {
+            alert.classList.remove('show');
+        }, 5000);
+    }
 
     // Initialize on page load
     window.addEventListener('load', () => {
         initSupabase();
         
-        // Setup tab switching
+        // Setup tab switching AFTER DOM is ready
         document.querySelectorAll('.tab-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -515,7 +473,6 @@
         const email = document.getElementById('signup-email').value;
         const password = document.getElementById('signup-password').value;
         const role = document.getElementById('signup-role').value;
-        const accessCode = document.getElementById('signup-access-code').value;
 
         if (!role) {
             showAlert('Please select a role', 'error');
@@ -525,31 +482,6 @@
         }
 
         try {
-            // For students, verify the access code
-            if (role === 'student') {
-                if (!accessCode) {
-                    throw new Error('Access code is required for students');
-                }
-
-                // Check if access code exists and is valid
-                const { data: codeData, error: codeError } = await supabase
-                    .from('access_codes')
-                    .select('*')
-                    .eq('code', accessCode.toUpperCase())
-                    .eq('is_active', true)
-                    .single();
-
-                if (codeError || !codeData) {
-                    throw new Error('Invalid or expired access code');
-                }
-
-                // Check if code has reached max uses
-                if (codeData.max_uses && codeData.used_count >= codeData.max_uses) {
-                    throw new Error('This access code has reached its maximum number of uses');
-                }
-            }
-
-            // Create the user account
             const { data, error } = await supabase.auth.signUp({
                 email,
                 password,
@@ -563,7 +495,6 @@
 
             if (error) throw error;
 
-            // Create profile
             const { error: profileError } = await supabase
                 .from('profiles')
                 .insert([
@@ -571,33 +502,35 @@
                         id: data.user.id,
                         full_name: name,
                         email: email,
-                        role: role,
-                        access_code_used: role === 'student' ? accessCode.toUpperCase() : null
+                        role: role
                     }
                 ]);
 
             if (profileError) throw profileError;
-
-            // If student, increment the code usage count
-            if (role === 'student') {
-                const { error: updateError } = await supabase.rpc('increment_code_usage', {
-                    code_value: accessCode.toUpperCase()
-                });
-
-                if (updateError) console.error('Error updating code usage:', updateError);
-            }
-
             alert('✅ Account Created Successfully!\n\n📧 IMPORTANT: Please check your email to confirm your account before logging in.\n\n💡 Check your spam/junk folder if you don\'t see the email.\n\nYou will be redirected to the login page in a moment.');
 
             showAlert('Account created! Please check your email to verify.', 'success');
             
             document.getElementById('signup-form').reset();
-            btn.disabled = false;
-            btn.textContent = 'Create Account';
+            // Reset button state
+btn.disabled = false;
+btn.textContent = 'Create Account';
 
-            setTimeout(() => {
-                showForm('login');
-            }, 2000);
+// Redirect to login form
+setTimeout(() => {
+    // Hide signup form
+    const signupForm = document.getElementById('signup-form').parentElement;
+    if (signupForm) signupForm.style.display = 'none';
+    
+    // Show login form
+    const loginForm = document.getElementById('login-form').parentElement;
+    if (loginForm) loginForm.style.display = 'block';
+    
+    // Or if showForm function exists, use it
+    if (typeof showForm === 'function') {
+        showForm('login');
+    }
+}, 2000);
 
         } catch (error) {
             console.error('Full error:', error);
