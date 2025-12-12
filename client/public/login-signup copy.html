@@ -1,3 +1,4 @@
+new signup page:
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -48,14 +49,7 @@
             animation: slideUp 0.5s ease-out;
             border: 2px solid var(--border-color);
         }
-        .access-code-field {
-                    display: none;
-                }
 
-                .access-code-field.show {
-                    display: block;
-                    animation: slideDown 0.3s ease-out;
-                }
         @keyframes slideUp {
             from {
                 opacity: 0;
@@ -160,6 +154,35 @@
             display: block;
         }
 
+        .access-code-field {
+            display: none;
+        }
+
+        .access-code-field.show {
+            display: block;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                max-height: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                max-height: 100px;
+                transform: translateY(0);
+            }
+        }
+
+        .info-text {
+            font-size: 12px;
+            color: var(--text-light);
+            margin-top: 5px;
+            font-style: italic;
+        }
+
         .btn {
             width: 100%;
             padding: 14px;
@@ -240,6 +263,24 @@
         #login-form.active {
             display: block !important;
         }
+
+        .teacher-link {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .teacher-link a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .teacher-link a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -311,12 +352,13 @@
 
             <button type="submit" class="btn" id="signup-btn">Create Account</button>
         </form>
+
+
     </div>
 
-    <script type="module">
-import { supabase } from './auth.js';
+    <script>
+    let supabase;
 
-    // Helper functions - ONLY DECLARE ONCE
     function showForm(formType) {
         const loginForm = document.getElementById('login-form');
         const signupForm = document.getElementById('signup-form');
@@ -344,6 +386,23 @@ import { supabase } from './auth.js';
         }, 5000);
     }
 
+    async function initSupabase() {
+        try {
+            const supabaseUrl = localStorage.getItem('SUPABASE_URL');
+            const supabaseAnonKey = localStorage.getItem('SUPABASE_ANON_KEY');
+            
+            if (!supabaseUrl || !supabaseAnonKey) {
+                throw new Error('Missing Supabase environment variables. Set them in localStorage first.');
+            }
+            
+            supabase = window.supabase.createClient(supabaseUrl, supabaseAnonKey);
+            checkExistingSession();
+        } catch (error) {
+            console.error('Failed to initialize Supabase:', error);
+            showAlert('Configuration error. Please try again later.', 'error');
+        }
+    }
+
     async function checkExistingSession() {
         if (!supabase) return;
         
@@ -357,13 +416,11 @@ import { supabase } from './auth.js';
                 .single();
 
             if (profile?.role === 'teacher') {
-                window.location.href = '/Prompted-AI-Mastery/teacher-view.html';
-            } 
-            else if (profile?.role === 'student') {
-                window.location.href = '/Prompted-AI-Mastery/student-view.html';
-            }
-            else {
-                window.location.href = '/Prompted-AI-Mastery/index.html';
+                window.location.href = '/teacher-view.html';
+            } else if (profile?.role === 'student') {
+                window.location.href = '/student-view.html';
+            } else {
+                window.location.href = '/index.html';
             }
         }
     }
@@ -382,9 +439,10 @@ import { supabase } from './auth.js';
             accessCodeInput.value = '';
         }
     });
+
     // Initialize on page load
     window.addEventListener('load', () => {
-        checkExistingSession(); // Check for existing session
+        initSupabase();
         
         // Setup tab switching
         document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -396,9 +454,13 @@ import { supabase } from './auth.js';
         });
     });
 
-    // Login form handler
     document.getElementById('login-form').addEventListener('submit', async (e) => {
         e.preventDefault();
+        
+        if (!supabase) {
+            showAlert('Still initializing. Please wait a moment.', 'error');
+            return;
+        }
         
         const btn = document.getElementById('login-btn');
         btn.disabled = true;
@@ -425,9 +487,9 @@ import { supabase } from './auth.js';
 
             setTimeout(() => {
                 if (profile?.role === 'teacher') {
-                    window.location.href = '/Prompted-AI-Mastery/teacher-view.html';
+                    window.location.href = '/teacher-view.html';
                 } else {
-                    window.location.href = '/Prompted-AI-Mastery/student-view.html';
+                    window.location.href = '/student-view.html';
                 }
             }, 1500);
 
@@ -438,9 +500,13 @@ import { supabase } from './auth.js';
         }
     });
 
-    // Signup form handler
     document.getElementById('signup-form').addEventListener('submit', async (e) => {
         e.preventDefault();
+        
+        if (!supabase) {
+            showAlert('Still initializing. Please wait a moment.', 'error');
+            return;
+        }
         
         const btn = document.getElementById('signup-btn');
         btn.disabled = true;
@@ -541,10 +607,14 @@ import { supabase } from './auth.js';
             btn.textContent = 'Create Account';
         }
     });
-    
-    // Forgot password handler
-    window.handleForgotPassword = async function(e) {
+
+    async function handleForgotPassword(e) {
         e.preventDefault();
+        
+        if (!supabase) {
+            showAlert('Still initializing. Please wait a moment.', 'error');
+            return;
+        }
         
         const email = prompt('Enter your email address:');
         
